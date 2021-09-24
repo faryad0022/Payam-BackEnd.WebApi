@@ -1,5 +1,7 @@
 ﻿using BackEnd.DataLayer.Entities.Access;
 using BackEnd.DataLayer.Entities.Account;
+using BackEnd.DataLayer.Entities.Gallery;
+using BackEnd.DataLayer.Entities.Site;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -39,6 +41,22 @@ namespace BackEnd.DataLayer.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
+
+        public DbSet<Slider> Sliders { get; set; }
+        public DbSet<Social> Socials { get; set; }
+        public DbSet<ContactUs> ContactUs { get; set; }
+        public DbSet<ContactAddress> ContactAddresses { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
+
+        public DbSet<ImageGallery> imageGalleries { get; set; }
+        public DbSet<ImageComment> ImageComments { get; set; }
+
+
+
+
+
+
+
 
 
         #endregion

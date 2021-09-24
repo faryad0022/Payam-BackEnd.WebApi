@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackEnd.WebApi.Controllers
+namespace BackEnd.WebApi.Controllers.Site
 {
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class SiteBaseController : ControllerBase
     {
