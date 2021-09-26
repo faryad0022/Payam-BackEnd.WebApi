@@ -39,9 +39,18 @@ namespace BackEnd.Core.Services.Implementations
             return await userRepository.GetEntitiesQuery().ToListAsync();
 
         }
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await userRepository.GetEntitiesQuery().SingleOrDefaultAsync(u => u.Email == email.ToLower().Trim());
+        }
+
+
+        public async Task<User> GetUserById(long userId)
+        {
+            return await userRepository.GetEntityById(userId);
+        }
 
         #endregion
-
 
         #region Register
         public async Task<bool> IsUserExistByEmailAsync(string email)
@@ -76,7 +85,6 @@ namespace BackEnd.Core.Services.Implementations
         }
         #endregion
 
-
         #region LogIn
         public async Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn)
         {
@@ -89,8 +97,10 @@ namespace BackEnd.Core.Services.Implementations
             return LogInUserResult.Success;
 
         }
-        #endregion Activate User
+        #endregion
 
+        #region  ActivateUser
+        
         public async Task ActivateUser(User user)
         {
 
@@ -102,24 +112,35 @@ namespace BackEnd.Core.Services.Implementations
 
         }
 
+        #endregion
 
-        #region  
+        #region Reset User Password
 
+        public async Task<bool> SendResetEmail(User user)
+        {
+            try
+            {
+                var body = await viewRender.RenderToStringAsync("Email/ResetPassword", user);
+                mailSender.Send(user.Email, "بازیابی کلمه عبور", body);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+        public async Task SetNewPassword(User user, string password)
+        {
+            user.Password = passwordHelper.EncodePasswordMd5(password);
+            user.EmailActiveCode = Guid.NewGuid().ToString();
+            userRepository.UpdateEntity(user);
+            await userRepository.SaveChanges();
+        }
 
 
         #endregion
-
-        public async Task<User> GetUserByEmailAsync(string email)
-        {
-            return await userRepository.GetEntitiesQuery().SingleOrDefaultAsync(u => u.Email == email.ToLower().Trim());
-        }
-
-
-        public async Task<User> GetUserById(long userId)
-        {
-            return await userRepository.GetEntityById(userId);
-        }
-
 
         #region Dispose
         public void Dispose()

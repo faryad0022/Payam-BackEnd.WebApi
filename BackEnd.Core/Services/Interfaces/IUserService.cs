@@ -18,5 +18,7 @@ namespace BackEnd.Core.Services.Interfaces
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserById(long userId);
         Task ActivateUser(User user);
+        Task SetNewPassword(User user, string password);
+        Task<bool> SendResetEmail(User user);
     }
 }

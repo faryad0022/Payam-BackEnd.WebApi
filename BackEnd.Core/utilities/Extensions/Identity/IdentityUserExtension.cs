@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Text;
 
 namespace BackEnd.Core.utilities.Extensions.Identity
 {
@@ -14,7 +12,7 @@ namespace BackEnd.Core.utilities.Extensions.Identity
                 var result = claimsPrincipal.FindFirst(ClaimTypes.NameIdentifier).Value;
                 return Convert.ToInt64(result);
             }
-            return default (long);
+            return default(long);
         }
     }
 }

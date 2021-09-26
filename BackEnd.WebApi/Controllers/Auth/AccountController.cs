@@ -130,6 +130,31 @@ namespace BackEnd.WebApi.Controllers.Auth
         }
         #endregion
 
+        #region Reset User Password
+        [HttpGet("send-reset-email/{email}")]
+        public async Task<IActionResult> SendResetEmail(string email)
+        {
+            var user = await userService.GetUserByEmailAsync(email);
+            if (user == null) return JsonResponseStatus.NotFound(new { message = "نام کاربری یافت نشد" });
+            if (await userService.SendResetEmail(user)) return JsonResponseStatus.Success(new {message = "ایمیل بازیابی ارسال شد"});
+            return JsonResponseStatus.ServerError(new {message ="خطا در سرور"});
+
+        }
+
+        [HttpPost("set-new-password")]
+        public async Task<IActionResult> SetNewPassword(SetNewPasswordDTO setNewPassword)
+        {
+            var user = await userService.GetUserByEmailAsync(setNewPassword.UserEmail);
+            if (user.EmailActiveCode == setNewPassword.ActiveCode)
+            {
+                await userService.SetNewPassword(user,setNewPassword.Password);
+                return JsonResponseStatus.Success();
+            }
+
+            return JsonResponseStatus.NotFound();
+        }
+        #endregion
+
         #region LogOut
         [HttpGet("logout")]
         public async Task<IActionResult> LogOut()
