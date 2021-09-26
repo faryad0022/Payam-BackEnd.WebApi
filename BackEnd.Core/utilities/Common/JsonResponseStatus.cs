@@ -16,6 +16,25 @@ namespace BackEnd.Core.utilities.Common
             return new JsonResult(new { status = "Success", data=returnData });
         }
 
+        public static JsonResult ModelError()
+        {
+            return new JsonResult(new { status = "ModelError" });
+        }
+        public static JsonResult ModelError(object returnData)
+        {
+            return new JsonResult(new { status = "ModelError", data = returnData });
+        }
+
+        public static JsonResult ServerError()
+        {
+            return new JsonResult(new { status = "ServerError" });
+        }
+        public static JsonResult ServerError(object returnData)
+        {
+            return new JsonResult(new { status = "ServerError", data = returnData });
+        }
+
+
         public static JsonResult NotFound()
         {
             return new JsonResult(new { status = "NotFound" });

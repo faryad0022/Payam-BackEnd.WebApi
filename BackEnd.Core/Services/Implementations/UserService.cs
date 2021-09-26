@@ -1,6 +1,7 @@
 ﻿using BackEnd.Core.DTOs.Account;
 using BackEnd.Core.Security;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Convertors;
 using BackEnd.DataLayer.Entities.Account;
 using BackEnd.DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -16,14 +17,20 @@ namespace BackEnd.Core.Services.Implementations
     public class UserService : IUserService
     {
         #region Constructor
-        private IGenericRepository<User> userRepository;
+        private readonly IGenericRepository<User> userRepository;
         private IPasswordHelper passwordHelper;
+        private IMailSender mailSender;
+        private IViewRenderService viewRender;
 
-        public UserService(IGenericRepository<User> userRepository, IPasswordHelper passwordHelper)
+        public UserService(IGenericRepository<User> userRepository, IPasswordHelper passwordHelper, IMailSender mailSender, IViewRenderService viewRender)
         {
             this.userRepository = userRepository;
             this.passwordHelper = passwordHelper;
+            this.mailSender = mailSender;
+            this.viewRender = viewRender;
         }
+
+
         #endregion
 
         #region User Section
@@ -47,17 +54,25 @@ namespace BackEnd.Core.Services.Implementations
         {
             if (await IsUserExistByEmailAsync(register.Email))
                 return RegisterUserResult.EmailExist;
-
-            var user = new User
+            try
             {
-                Email = register.Email.SanitizeText(),
-                Password = passwordHelper.EncodePasswordMd5(register.Password),
-                EmailActiveCode = Guid.NewGuid().ToString()
-            };
+                var user = new User
+                {
+                    Email = register.Email.SanitizeText(),
+                    Password = passwordHelper.EncodePasswordMd5(register.Password),
+                    EmailActiveCode = Guid.NewGuid().ToString()
+                };
+                var body = await viewRender.RenderToStringAsync("Email/ActivateAccount", user);
+                mailSender.Send(user.Email, "فعال سازی حساب کاربری", body);
+                await userRepository.AddEntity(user);
+                await userRepository.SaveChanges();
+                return RegisterUserResult.Success;
+            }
+            catch
+            {
+                return RegisterUserResult.EmailServerError;
+            }
 
-            await userRepository.AddEntity(user);
-            await userRepository.SaveChanges();
-            return RegisterUserResult.Success;
         }
         #endregion
 
@@ -72,8 +87,26 @@ namespace BackEnd.Core.Services.Implementations
             if (!user.IsActivated)
                 return LogInUserResult.NotActive;
             return LogInUserResult.Success;
-        
+
         }
+        #endregion Activate User
+
+        public async Task ActivateUser(User user)
+        {
+
+            user.IsActivated = true;
+            user.EmailActiveCode = Guid.NewGuid().ToString();
+            userRepository.UpdateEntity(user);
+            await userRepository.SaveChanges();
+
+
+        }
+
+
+        #region  
+
+
+
         #endregion
 
         public async Task<User> GetUserByEmailAsync(string email)
@@ -82,7 +115,10 @@ namespace BackEnd.Core.Services.Implementations
         }
 
 
-       
+        public async Task<User> GetUserById(long userId)
+        {
+            return await userRepository.GetEntityById(userId);
+        }
 
 
         #region Dispose

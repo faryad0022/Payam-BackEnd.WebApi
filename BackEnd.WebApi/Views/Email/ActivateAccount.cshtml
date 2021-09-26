@@ -1,0 +1,10 @@
+﻿@model BackEnd.DataLayer.Entities.Account.User
+
+    <div style="border: 1px solid; text-align: center; border-radius: 8px; box-shadow: 0px 10px 5px gray; padding: 10px;">
+        <h1>ایمیل فعالسازی حساب کاربری</h1>
+        <p>
+            جهت فعالسازی حساب کاربری خود یر روی لینک زیر کلیک نمائید
+        </p>
+        <a href="http://localhost:4200/auth/activate-account/@Model.EmailActiveCode/@Model.Email">لینک فعالسازی</a>
+        <br />
+    </div>

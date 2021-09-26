@@ -16,5 +16,7 @@ namespace BackEnd.Core.Services.Interfaces
         Task<bool> IsUserExistByEmailAsync(string email);
         Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn);
         Task<User> GetUserByEmailAsync(string email);
+        Task<User> GetUserById(long userId);
+        Task ActivateUser(User user);
     }
 }

@@ -30,6 +30,7 @@ namespace BackEnd.Core.DTOs.Account
         public enum RegisterUserResult
         {
             EmailExist,
+            EmailServerError,
             Success
         }
     }

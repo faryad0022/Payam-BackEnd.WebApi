@@ -1,6 +1,7 @@
 using BackEnd.Core.Security;
 using BackEnd.Core.Services.Implementations;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Convertors;
 using BackEnd.Core.utilities.Extensions.Connection;
 using BackEnd.DataLayer.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -80,6 +81,9 @@ namespace BackEnd.WebApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISliderService, SliderService>();
             services.AddScoped<IPasswordHelper,PasswordHelper>();
+            services.AddScoped<IMailSender, SendEmail>();
+            services.AddScoped<IViewRenderService, RenderViewToString>();
+
             #endregion
 
             #region Authentication Setting
@@ -112,6 +116,8 @@ namespace BackEnd.WebApi
             });
             #endregion
             services.AddControllers();
+            services.AddControllersWithViews();
+            services.AddRazorPages();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
