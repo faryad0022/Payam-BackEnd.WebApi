@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using BackEnd.Core.DTOs.Address;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.DataLayer.Entities.Site;
 using BackEnd.DataLayer.Repository;
@@ -11,35 +10,38 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BackEnd.Core.Services.Implementations
 {
-    public class AddressService : IAddressService
+    public class SocialService : ISocialService
     {
         #region Constructor
 
-        private IGenericRepository<ContactAddress> addressRepository;
+        private IGenericRepository<Social> socialRepository;
 
-        public AddressService(IGenericRepository<ContactAddress> addressRepository)
+        public SocialService(IGenericRepository<Social> socialRepository)
         {
-            this.addressRepository = addressRepository;
+            this.socialRepository = socialRepository;
         }
 
         #endregion
 
-        #region Get
+        #region GetSocials
 
-        public async Task<List<ContactAddress>> GetAllActiveAddressAsync()
+        public async Task<List<Social>> GetAllActiveSocialsAsync()
         {
-            return  await addressRepository.GetEntitiesQuery().Where(a => !a.IsDelete).ToListAsync();
+            return await socialRepository.GetEntitiesQuery().Where(s => !s.IsDelete).ToListAsync();
         }
 
         #endregion
 
         #region Dispose
+
         public void Dispose()
         {
-            addressRepository?.Dispose();
+            socialRepository?.Dispose();
         }
 
         #endregion
+
+
 
     }
 }

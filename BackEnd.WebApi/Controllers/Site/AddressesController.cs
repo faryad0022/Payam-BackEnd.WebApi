@@ -26,7 +26,7 @@ namespace BackEnd.WebApi.Controllers.Site
         [HttpGet("get-address")]
         public async Task<IActionResult> GetAllActiveAddress()
         {
-            var addresses = await addressService.GetAllActiveAddress();
+            var addresses = await addressService.GetAllActiveAddressAsync();
             return JsonResponseStatus.Success(addresses);
         }
 
