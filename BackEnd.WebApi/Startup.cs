@@ -83,7 +83,8 @@ namespace BackEnd.WebApi
             services.AddScoped<IPasswordHelper,PasswordHelper>();
             services.AddScoped<IMailSender, SendEmail>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
-
+            services.AddScoped<IImageGalleryService, ImageGaleryService>();
+            services.AddScoped<IAddressService, AddressService>();
             #endregion
 
             #region Authentication Setting

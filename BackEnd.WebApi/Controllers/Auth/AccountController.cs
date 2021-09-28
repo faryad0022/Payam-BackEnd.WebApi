@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using static BackEnd.Core.DTOs.Account.RegisterUserDTO;
 
 namespace BackEnd.WebApi.Controllers.Auth
@@ -54,7 +55,6 @@ namespace BackEnd.WebApi.Controllers.Auth
         #endregion
 
         #region  Activate User Account
-
         [HttpPost("activate-email")]
         public async Task<IActionResult> ActiveAccount(ActiveUserAccountDTO acitiveParam)
         {
@@ -131,6 +131,7 @@ namespace BackEnd.WebApi.Controllers.Auth
         #endregion
 
         #region Reset User Password
+
         [HttpGet("send-reset-email/{email}")]
         public async Task<IActionResult> SendResetEmail(string email)
         {

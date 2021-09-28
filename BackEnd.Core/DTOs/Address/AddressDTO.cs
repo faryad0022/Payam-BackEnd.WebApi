@@ -1,12 +1,11 @@
-﻿using BackEnd.DataLayer.Entities.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace BackEnd.DataLayer.Entities.Site
+namespace BackEnd.Core.DTOs.Address
 {
-    public class ContactAddress : BaseEntity
+    public class AddressDTO
     {
         #region Properties
         [Display(Name = "شهر")]
@@ -38,5 +37,9 @@ namespace BackEnd.DataLayer.Entities.Site
         public string WorkHour { get; set; }
         #endregion
     }
-
+    public enum AddressResult
+    {
+        ServerError,
+        Success
+    }
 }
