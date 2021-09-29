@@ -86,6 +86,8 @@ namespace BackEnd.WebApi
             services.AddScoped<IImageGalleryService, ImageGaleryService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<ISocialService, SocialService>();
+            services.AddScoped<IContactUsService, ContactUsService>();
+
             #endregion
 
             #region Authentication Setting
