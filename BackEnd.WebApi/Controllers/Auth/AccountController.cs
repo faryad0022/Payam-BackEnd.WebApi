@@ -14,6 +14,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BackEnd.Core.ViewModels.Account;
 using Microsoft.AspNetCore.Authorization;
 using static BackEnd.Core.DTOs.Account.RegisterUserDTO;
 
@@ -44,7 +45,7 @@ namespace BackEnd.WebApi.Controllers.Auth
                     case RegisterUserResult.EmailExist:
                         return JsonResponseStatus.Error(new { message = "ایمیل وارد شده تکراری است" });
                     case RegisterUserResult.EmailServerError:
-                        return JsonResponseStatus.ServerError(new {message = "خطا در ارسال ایمیل فعالسازی"});
+                        return JsonResponseStatus.ServerError(new { message = "خطا در ارسال ایمیل فعالسازی" });
                     case RegisterUserResult.Success:
                         return JsonResponseStatus.Success();
 
@@ -64,7 +65,7 @@ namespace BackEnd.WebApi.Controllers.Auth
                 await userService.ActivateUser(user);
                 return JsonResponseStatus.Success();
             }
-            
+
             return JsonResponseStatus.NotFound();
         }
 
@@ -74,7 +75,7 @@ namespace BackEnd.WebApi.Controllers.Auth
         [HttpPost("login")]
         public async Task<IActionResult> LogIn([FromBody] LogInUserDTO logIn)
         {
-            
+
             if (ModelState.IsValid)
             {
                 var res = await userService.LoginUserAsync(logIn);
@@ -101,7 +102,21 @@ namespace BackEnd.WebApi.Controllers.Auth
 
                             );
                         var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
-                        return JsonResponseStatus.Success(new { token= tokenString, expireTime=30, firstName=user.FirstName, lastName=user.LastName, userId=user.Id});
+                        var returnUser = new VmReturnUser
+                        {
+                            Address = user.Address,
+                            CreateDate = user.CreateDate,
+                            Email = user.Email,
+                            FirstName = user.FirstName,
+                            Id = user.Id,
+                            IsActivated = user.IsActivated,
+                            IsDelete = user.IsDelete,
+                            LastName = user.LastName,
+                            LastUpdateDate = user.LastUpdateDate,
+                            Token = tokenString,
+                            ExpireTime = 30
+                        };
+                        return JsonResponseStatus.Success(returnUser);
 
 
 
@@ -118,13 +133,20 @@ namespace BackEnd.WebApi.Controllers.Auth
             if (User.Identity.IsAuthenticated)
             {
                 var user = await userService.GetUserById(User.GetUserId());
-                return JsonResponseStatus.Success(new 
-                { 
-                    firstName = user.FirstName,
-                    lastName = user.LastName,
-                    email = user.Email,
-                    userId = user.Id
-                });
+                var returnUser = new VmReturnUser
+                {
+                    Address = user.Address,
+                    CreateDate = user.CreateDate,
+                    Email = user.Email,
+                    FirstName = user.FirstName,
+                    Id = user.Id,
+                    IsActivated = user.IsActivated,
+                    IsDelete = user.IsDelete,
+                    LastName = user.LastName,
+                    LastUpdateDate = user.LastUpdateDate,
+                    ExpireTime = 30
+                };
+                return JsonResponseStatus.Success(returnUser);
             }
             return JsonResponseStatus.Error();
         }
@@ -137,8 +159,8 @@ namespace BackEnd.WebApi.Controllers.Auth
         {
             var user = await userService.GetUserByEmailAsync(email);
             if (user == null) return JsonResponseStatus.NotFound(new { message = "نام کاربری یافت نشد" });
-            if (await userService.SendResetEmail(user)) return JsonResponseStatus.Success(new {message = "ایمیل بازیابی ارسال شد"});
-            return JsonResponseStatus.ServerError(new {message ="خطا در سرور"});
+            if (await userService.SendResetEmail(user)) return JsonResponseStatus.Success(new { message = "ایمیل بازیابی ارسال شد" });
+            return JsonResponseStatus.ServerError(new { message = "خطا در سرور" });
 
         }
 
@@ -148,7 +170,7 @@ namespace BackEnd.WebApi.Controllers.Auth
             var user = await userService.GetUserByEmailAsync(setNewPassword.UserEmail);
             if (user.EmailActiveCode == setNewPassword.ActiveCode)
             {
-                await userService.SetNewPassword(user,setNewPassword.Password);
+                await userService.SetNewPassword(user, setNewPassword.Password);
                 return JsonResponseStatus.Success();
             }
 
@@ -160,7 +182,7 @@ namespace BackEnd.WebApi.Controllers.Auth
         [HttpGet("logout")]
         public async Task<IActionResult> LogOut()
         {
-            if(User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated)
             {
                 await HttpContext.SignOutAsync();
                 return JsonResponseStatus.Success();
