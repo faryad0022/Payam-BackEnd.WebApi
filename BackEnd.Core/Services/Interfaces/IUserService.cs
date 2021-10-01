@@ -20,5 +20,7 @@ namespace BackEnd.Core.Services.Interfaces
         Task ActivateUser(User user);
         Task SetNewPassword(User user, string password);
         Task<bool> SendResetEmail(User user);
+        Task<bool> ChangeUserActivationAsync(User user);
+
     }
 }

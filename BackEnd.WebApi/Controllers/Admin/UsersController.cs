@@ -4,6 +4,7 @@ using BackEnd.Core.Services.Implementations;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Common;
 using BackEnd.WebApi.Controllers.Site;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
@@ -26,6 +27,16 @@ namespace BackEnd.WebApi.Controllers.Admin
         {
             var users = await _userService.GetAllUsersAsync();
             return JsonResponseStatus.Success(users);
+        }
+
+        [HttpPost("change-user-activation")]
+        public async Task<IActionResult> ChangeUserActivation([FromBody]long id)
+        {
+            var user = await _userService.GetUserById(id);
+            if (user==null) return JsonResponseStatus.NotFound();
+            if (!await _userService.ChangeUserActivationAsync(user)) return JsonResponseStatus.ServerError(user);
+            return JsonResponseStatus.Success(user);
+
         }
     }
 }

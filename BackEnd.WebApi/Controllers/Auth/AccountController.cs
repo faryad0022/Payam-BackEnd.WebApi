@@ -33,6 +33,28 @@ namespace BackEnd.WebApi.Controllers.Auth
         }
         #endregion
 
+        #region CreateToken
+
+        private string CreateToken(string Email, long id)
+        {
+            var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(confiuration.GetValue<string>("Jwt:Key")));
+            var signInCredential = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+            var tokenOptions = new JwtSecurityToken(
+                issuer: confiuration.GetValue<string>("Jwt:Issuer"),
+                claims: new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, Email),
+                    new Claim(ClaimTypes.NameIdentifier,id.ToString())
+                },
+                expires: DateTime.Now.AddDays(30),
+                signingCredentials: signInCredential
+
+            );
+            var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+            return tokenString;
+        }
+
+        #endregion
         #region Register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDTO register)
@@ -88,20 +110,7 @@ namespace BackEnd.WebApi.Controllers.Auth
                         return JsonResponseStatus.Error(new { message = "حساب کاربری فعال نشده است" });
                     case LogInUserDTO.LogInUserResult.Success:
                         var user = await userService.GetUserByEmailAsync(logIn.Email);
-                        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(confiuration.GetValue<string>("Jwt:Key")));
-                        var signInCredential = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
-                        var tokenOptions = new JwtSecurityToken(
-                             issuer: confiuration.GetValue<string>("Jwt:Issuer"),
-                             claims: new List<Claim>
-                             {
-                                 new Claim(ClaimTypes.Name, user.Email),
-                                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString())
-                             },
-                             expires: DateTime.Now.AddDays(30),
-                             signingCredentials: signInCredential
-
-                            );
-                        var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+                        var tokenString = CreateToken(user.Email, user.Id);
                         var returnUser = new VmReturnUser
                         {
                             Address = user.Address,
@@ -133,6 +142,8 @@ namespace BackEnd.WebApi.Controllers.Auth
             if (User.Identity.IsAuthenticated)
             {
                 var user = await userService.GetUserById(User.GetUserId());
+                var tokenString = CreateToken(user.Email, user.Id);
+
                 var returnUser = new VmReturnUser
                 {
                     Address = user.Address,
@@ -144,7 +155,8 @@ namespace BackEnd.WebApi.Controllers.Auth
                     IsDelete = user.IsDelete,
                     LastName = user.LastName,
                     LastUpdateDate = user.LastUpdateDate,
-                    ExpireTime = 30
+                    ExpireTime = 30,
+                    Token = tokenString
                 };
                 return JsonResponseStatus.Success(returnUser);
             }

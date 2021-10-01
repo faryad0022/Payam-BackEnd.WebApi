@@ -50,6 +50,41 @@ namespace BackEnd.Core.Services.Implementations
             return await userRepository.GetEntityById(userId);
         }
 
+        public async Task<bool> ChangeUserActivationAsync(User user)
+        {
+            try
+            {
+                user.IsActivated = !user.IsActivated;
+                userRepository.UpdateEntity(user);
+                await userRepository.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+
+        }
+
+
+        #endregion
+
+        #region Filter && Paging
+        public async Task<FilterImageDTO> FilterImagesAsync(FilterImageDTO filter)
+        {
+            var imageQuery = imageRepository.GetEntitiesQuery().AsQueryable();
+            if (!string.IsNullOrEmpty(filter.Title))
+            {
+                imageQuery = imageQuery.Where(s => s.Title.Contains(filter.Title));
+            }
+
+            var count = (int)Math.Ceiling(imageQuery.Count() / (double)filter.TakeEntity);// تعداد صفحات
+            var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
+            var images = await imageQuery.Paging(pager).ToListAsync();
+            return filter.SetImages(images).SetPaging(pager);
+        }
+
+
         #endregion
 
         #region Register
