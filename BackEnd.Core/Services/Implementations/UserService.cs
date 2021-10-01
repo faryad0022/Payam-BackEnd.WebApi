@@ -69,23 +69,7 @@ namespace BackEnd.Core.Services.Implementations
 
         #endregion
 
-        #region Filter && Paging
-        public async Task<FilterImageDTO> FilterImagesAsync(FilterImageDTO filter)
-        {
-            var imageQuery = imageRepository.GetEntitiesQuery().AsQueryable();
-            if (!string.IsNullOrEmpty(filter.Title))
-            {
-                imageQuery = imageQuery.Where(s => s.Title.Contains(filter.Title));
-            }
 
-            var count = (int)Math.Ceiling(imageQuery.Count() / (double)filter.TakeEntity);// تعداد صفحات
-            var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
-            var images = await imageQuery.Paging(pager).ToListAsync();
-            return filter.SetImages(images).SetPaging(pager);
-        }
-
-
-        #endregion
 
         #region Register
         public async Task<bool> IsUserExistByEmailAsync(string email)
