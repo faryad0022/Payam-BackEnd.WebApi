@@ -96,7 +96,6 @@ namespace BackEnd.Core.Services.Implementations
             try
             {
 
-                oldAddress.IsDelete = newAddress.IsDelete;
                 oldAddress.Address = newAddress.Address;
                 oldAddress.Telephone = newAddress.Telephone;
                 oldAddress.CellPhone = newAddress.CellPhone;

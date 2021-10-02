@@ -105,7 +105,7 @@ namespace BackEnd.WebApi.Controllers.Admin
                 WorkHour = newAddress.WorkHour,
                 CellPhone = newAddress.CellPhone,
                 Id = newAddress.Id,
-                IsDelete = newAddress.IsDelete,
+                IsDelete = oldAddress.IsDelete,
                 Telephone = newAddress.Telephone
             };
             return JsonResponseStatus.Success(vmReturnAddress);
