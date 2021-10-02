@@ -14,6 +14,6 @@ namespace BackEnd.Core.Services.Interfaces
         Task<bool> AddNewAddressAsync(AddressDTO address);
         Task<bool> ChangeAddressStateAsync(ContactAddress address);
         Task<ContactAddress> GetAddressByIdAsync(long Id);
-        Task<bool> EditAddressAsync(AddressDTO newAddress);
+        Task<bool> EditAddressAsync(AddressDTO newAddress, ContactAddress oldAddress);
     }
 }

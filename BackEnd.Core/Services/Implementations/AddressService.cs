@@ -91,24 +91,23 @@ namespace BackEnd.Core.Services.Implementations
 
         #region Edit
 
-        public async Task<bool> EditAddressAsync(AddressDTO newAddress)
+        public async Task<bool> EditAddressAsync(AddressDTO newAddress, ContactAddress oldAddress)
         {
             try
             {
-                var address = new ContactAddress
-                {
-                    IsDelete = newAddress.IsDelete,
-                    Address = newAddress.Address,
-                    Telephone = newAddress.Telephone,
-                    CellPhone = newAddress.CellPhone,
-                    City = newAddress.City,
-                    WorkHour = newAddress.WorkHour
-                };
-                addressRepository.UpdateEntity(address);
+
+                oldAddress.IsDelete = newAddress.IsDelete;
+                oldAddress.Address = newAddress.Address;
+                oldAddress.Telephone = newAddress.Telephone;
+                oldAddress.CellPhone = newAddress.CellPhone;
+                oldAddress.City = newAddress.City;
+                oldAddress.WorkHour = newAddress.WorkHour;
+               
+                addressRepository.UpdateEntity(oldAddress);
                 await addressRepository.SaveChanges();
                 return true;
             }
-            catch(Exception e)
+            catch
             {
                 return false;
             }

@@ -96,7 +96,7 @@ namespace BackEnd.WebApi.Controllers.Admin
             if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
             var oldAddress = await addressService.GetAddressByIdAsync(newAddress.Id);
             if (oldAddress == null) return JsonResponseStatus.NotFound();
-            if (!await addressService.EditAddressAsync(newAddress)) return JsonResponseStatus.ServerError();
+            if (!await addressService.EditAddressAsync(newAddress,oldAddress)) return JsonResponseStatus.ServerError();
 
             var vmReturnAddress = new VmReturnAddress
             {
