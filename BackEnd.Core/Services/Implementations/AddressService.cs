@@ -30,6 +30,91 @@ namespace BackEnd.Core.Services.Implementations
         {
             return  await addressRepository.GetEntitiesQuery().Where(a => !a.IsDelete).ToListAsync();
         }
+        public async Task<List<ContactAddress>> GetAllAddressAsync()
+        {
+            return await addressRepository.GetEntitiesQuery().ToListAsync();
+        }
+
+        public async Task<ContactAddress> GetAddressByIdAsync(long Id)
+        {
+            return await addressRepository.GetEntityById(Id);
+        }
+
+        #endregion
+
+        #region Add
+
+        public async Task<bool> AddNewAddressAsync(AddressDTO addr)
+        {
+            var address = new ContactAddress
+            {
+                Address = addr.Address,
+                City = addr.City,
+                Telephone = addr.Telephone,
+                CellPhone = addr.CellPhone,
+                WorkHour = addr.WorkHour,
+                
+            };
+            try
+            {
+                await addressRepository.AddEntity(address);
+                await addressRepository.SaveChanges();
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region delete
+
+        public async Task<bool> ChangeAddressStateAsync(ContactAddress address)
+        {
+            try
+            {
+                address.IsDelete = !address.IsDelete;
+                addressRepository.UpdateEntity(address);
+                await addressRepository.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
+        #region Edit
+
+        public async Task<bool> EditAddressAsync(AddressDTO newAddress)
+        {
+            try
+            {
+                var address = new ContactAddress
+                {
+                    IsDelete = newAddress.IsDelete,
+                    Address = newAddress.Address,
+                    Telephone = newAddress.Telephone,
+                    CellPhone = newAddress.CellPhone,
+                    City = newAddress.City,
+                    WorkHour = newAddress.WorkHour
+                };
+                addressRepository.UpdateEntity(address);
+                await addressRepository.SaveChanges();
+                return true;
+            }
+            catch(Exception e)
+            {
+                return false;
+            }
+
+        }
+
 
         #endregion
 
