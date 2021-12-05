@@ -24,5 +24,9 @@
     <ProjectReference Include="..\BackEnd.Core\BackEnd.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\logo\origin\" />
+  </ItemGroup>
+
 
 </Project>

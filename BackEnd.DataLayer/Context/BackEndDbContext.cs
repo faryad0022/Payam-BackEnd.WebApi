@@ -1,5 +1,6 @@
 ﻿using BackEnd.DataLayer.Entities.Access;
 using BackEnd.DataLayer.Entities.Account;
+using BackEnd.DataLayer.Entities.Blog;
 using BackEnd.DataLayer.Entities.Gallery;
 using BackEnd.DataLayer.Entities.Site;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,9 @@ namespace BackEnd.DataLayer.Context
 
         public DbSet<ImageGallery> imageGalleries { get; set; }
         public DbSet<ImageComment> ImageComments { get; set; }
+
+        public DbSet<BlogGroup> BlogGroups { get; set; }
+        public DbSet<BlogContent> Blogs { get; set; }
 
 
 

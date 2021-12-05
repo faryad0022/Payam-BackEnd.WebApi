@@ -20,6 +20,6 @@ namespace BackEnd.Core.ViewModels.Account
         public bool IsActivated { get; set; }
         public string Token { get; set; }
         public int ExpireTime { get; set; }
-#endregion
+        #endregion
     }
 }

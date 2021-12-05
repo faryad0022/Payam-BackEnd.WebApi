@@ -143,7 +143,7 @@ namespace BackEnd.Core.Services.Implementations
                 mailSender.Send(user.Email, "بازیابی کلمه عبور", body);
                 return true;
             }
-            catch
+            catch(Exception e)
             {
                 return false;
             }

@@ -1,4 +1,5 @@
 ﻿using BackEnd.DataLayer.Entities.Access;
+using BackEnd.DataLayer.Entities.Blog;
 using BackEnd.DataLayer.Entities.Common;
 using System;
 using System.Collections.Generic;
@@ -46,6 +47,8 @@ namespace BackEnd.DataLayer.Entities.Account
 
         #region Relations
         public ICollection<UserRole> UserRoles { get; set; }
+        public ICollection<BlogContent> Blogs { get; set; }
+
         #endregion
     }
 }

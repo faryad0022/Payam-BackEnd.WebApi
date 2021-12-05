@@ -1,8 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BackEnd.Core.DTOs.Images;
 using BackEnd.Core.Services.Interfaces;
@@ -15,7 +11,7 @@ namespace BackEnd.WebApi.Controllers.Site
     {
         #region constructor
 
-                private readonly IImageGalleryService imageGalleryService;
+        private readonly IImageGalleryService imageGalleryService;
 
         public ImagesController(IImageGalleryService imageGalleryService)
         {

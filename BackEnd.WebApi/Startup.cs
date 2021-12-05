@@ -87,6 +87,8 @@ namespace BackEnd.WebApi
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<ISocialService, SocialService>();
             services.AddScoped<IContactUsService, ContactUsService>();
+            services.AddScoped<IBlogContentService, BlogContentService>();
+            services.AddScoped<IBlogGroupService, BlogGroupService>();
 
             #endregion
 
@@ -144,13 +146,14 @@ namespace BackEnd.WebApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
             #endregion
-            app.UseStaticFiles();
 
             app.UseCors(Configuration["Cors:PolicyString"]);
 
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
 
             app.UseRouting();
 

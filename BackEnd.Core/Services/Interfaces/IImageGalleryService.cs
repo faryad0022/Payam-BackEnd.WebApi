@@ -9,5 +9,6 @@ namespace BackEnd.Core.Services.Interfaces
     public interface IImageGalleryService: IDisposable
     {
         Task<FilterImageDTO> FilterImagesAsync(FilterImageDTO filter);
+        Task<bool> UploadImageToGalleryAsync(ImageGalleryDTO image);
     }
 }

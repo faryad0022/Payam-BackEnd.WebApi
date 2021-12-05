@@ -44,6 +44,31 @@ namespace BackEnd.Core.Services.Implementations
 
         #endregion
 
+        #region UploadImage
+
+        public async Task<bool> UploadImageToGalleryAsync(ImageGalleryDTO image)
+        {
+            var img = new ImageGallery
+            {
+                Description = image.Description,
+                ImageComments = null,
+                ImageName = image.ImageName,
+                Title = image.Title
+            };
+            try
+            {
+                await imageRepository.AddEntity(img);
+                await imageRepository.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        #endregion
+
         #region Dispose
 
         public void Dispose()
