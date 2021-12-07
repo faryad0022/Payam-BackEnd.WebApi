@@ -13,6 +13,7 @@ namespace BackEnd.DataLayer.Repository
         void UpdateEntity(TEntity entity);
         Task RemoveEntity(long entityId);
         void RemoveEntity(TEntity entity);
+        void DeleteEntity(TEntity entity);
         Task SaveChanges();
 
     }

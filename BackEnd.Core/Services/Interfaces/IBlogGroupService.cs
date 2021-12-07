@@ -12,7 +12,7 @@ namespace BackEnd.Core.Services.Interfaces
         Task<List<BlogGroup>> GetAllBlogGroupsAsync();
         Task<BlogGroup> GetBlogGroupByIdAsync(long Id);
         Task<BlogGroup> GetBlogGroupByTitleAsync(string Title);
-
+        Task<FilterBlogGroupDTO> GetFilterBlogGourps(FilterBlogGroupDTO filter);
 
         Task<bool> CheckUniqueTitleAsync(string Title);
 

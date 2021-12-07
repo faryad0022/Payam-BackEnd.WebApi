@@ -1,15 +1,17 @@
-﻿using System.Collections.Generic;
-using BackEnd.Core.DTOs.Paging;
-using BackEnd.DataLayer.Entities.Gallery;
+﻿using BackEnd.Core.DTOs.Paging;
+using BackEnd.Core.ViewModels.Blog;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-namespace BackEnd.Core.DTOs.Images
+namespace BackEnd.Core.DTOs.Blog
 {
-    public class FilterImageDTO: BasePaging
+    public class FilterBlogGroupDTO: BasePaging
     {
         public string Title { get; set; }
-        public List<ImageGallery> Images { get; set; }
+        public List<VmReturnBlogGroup> BlogGroups { get; set; }
 
-        public FilterImageDTO SetPaging(BasePaging paging)
+        public FilterBlogGroupDTO SetPaging(BasePaging paging)
         {
             this.PageId = paging.PageId;
             this.PageCount = paging.PageCount;
@@ -20,12 +22,10 @@ namespace BackEnd.Core.DTOs.Images
             this.SkipEntity = paging.SkipEntity;
             return this;
         }
-        public FilterImageDTO SetImages(List<ImageGallery> images)
+        public FilterBlogGroupDTO SetBlogGroups(List<VmReturnBlogGroup> blogGroups)
         {
-            this.Images = images;
+            this.BlogGroups = blogGroups;
             return this;
         }
-
-
     }
 }

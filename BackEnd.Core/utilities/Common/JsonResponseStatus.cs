@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Text;
+
 
 namespace BackEnd.Core.utilities.Common
 {
@@ -51,6 +49,15 @@ namespace BackEnd.Core.utilities.Common
         public static JsonResult Error(object returnData)
         {
             return new JsonResult(new { status = "Error", data = returnData });
+        }
+
+        public static JsonResult Duplicate()
+        {
+            return new JsonResult(new { status = "Duplicate" });
+        }
+        public static JsonResult Duplicate(object returnData)
+        {
+            return new JsonResult(new { status = "Duplicate", data = returnData });
         }
     }
 }

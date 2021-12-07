@@ -24,6 +24,13 @@ namespace BackEnd.Core.utilities.Extensions.FileExtensions
             }
         }
 
+        public static void DeleteImageFromServer(string fileName, string originalPath)
+        {
+
+                File.Delete(originalPath + fileName);
+   
+        }
+
         public static byte[] DecodeUrlBase64(string s)
         {
             return Convert.FromBase64String(s.Substring(s.LastIndexOf(',') + 1));

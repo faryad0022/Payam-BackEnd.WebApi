@@ -32,6 +32,8 @@ namespace BackEnd.WebApi.Controllers.Admin
 
         #endregion
 
+
+        #region Add
         [HttpPost("add-new-image")]
         public async Task<IActionResult> AddImageToGallery([FromBody]ImageGalleryDTO image)
         {
@@ -44,5 +46,29 @@ namespace BackEnd.WebApi.Controllers.Admin
             if(!await imageGalleryService.UploadImageToGalleryAsync(image)) return  JsonResponseStatus.ServerError();
             return JsonResponseStatus.Success(image);
         }
+
+        #endregion
+
+        #region Delete
+        [HttpPost("delete-image")]
+        public async Task<IActionResult> DeleteImageFromGallery([FromBody] ImageGalleryDTO image, [FromQuery] FilterImageDTO filter)
+        {
+            if (image == null) return JsonResponseStatus.NotFound();
+            if (!await imageGalleryService.ImageExistById(image.Id)) return JsonResponseStatus.NotFound();
+            if (!await imageGalleryService.DeleteImage(image)) return JsonResponseStatus.ServerError();
+            try
+            {
+                ImageUploaderExtensions.DeleteImageFromServer(image.ImageName, PathTools.GalleryServerPath);
+                var images = await imageGalleryService.FilterImagesAsync(filter);
+
+                return JsonResponseStatus.Success(images);
+            }
+            catch
+            {
+                return JsonResponseStatus.ServerError();
+            }
+        }
+
+        #endregion
     }
 }

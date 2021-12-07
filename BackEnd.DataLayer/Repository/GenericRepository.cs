@@ -2,9 +2,7 @@
 using BackEnd.DataLayer.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BackEnd.DataLayer.Repository
@@ -58,6 +56,12 @@ namespace BackEnd.DataLayer.Repository
             var entity = await GetEntityById(entityId);
             RemoveEntity(entity);
         }
+
+        public void DeleteEntity(TEntity entity)
+        {
+            dbSet.Remove(entity);
+        }
+
 
         public async Task SaveChanges()
         {

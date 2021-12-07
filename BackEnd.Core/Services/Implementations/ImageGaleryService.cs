@@ -26,10 +26,20 @@ namespace BackEnd.Core.Services.Implementations
 
         #endregion
 
+        #region Get
+        public async Task<bool> ImageExistById(long Id)
+        {
+            var img = await imageRepository.GetEntityById(Id);
+            if (img == null) return false;
+            return true;
+        }
+
+        #endregion
+
         #region Filter && Paging
         public async Task<FilterImageDTO> FilterImagesAsync(FilterImageDTO filter)
         {
-            var imageQuery = imageRepository.GetEntitiesQuery().AsQueryable();
+            var imageQuery = imageRepository.GetEntitiesQuery().OrderByDescending(s=>s.CreateDate).AsQueryable();//فیلتر نزولی بر اساس تاریخ
             if (!string.IsNullOrEmpty(filter.Title))
             {
                 imageQuery = imageQuery.Where(s => s.Title.Contains(filter.Title));
@@ -65,6 +75,26 @@ namespace BackEnd.Core.Services.Implementations
             {
                 return false;
             }
+        }
+
+        #endregion
+
+        #region Delete
+        public async Task<bool> DeleteImage(ImageGalleryDTO image)
+        {
+            try
+            {
+                var img = await imageRepository.GetEntityById(image.Id);
+                imageRepository.DeleteEntity(img);
+                await imageRepository.SaveChanges();
+                return true;
+            }
+            catch 
+            {
+
+                return false;
+            }
+
         }
 
         #endregion

@@ -1,5 +1,8 @@
 ﻿using BackEnd.Core.DTOs.Blog;
+using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Extensions.Paging;
+using BackEnd.Core.ViewModels.Blog;
 using BackEnd.DataLayer.Entities.Blog;
 using BackEnd.DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +35,33 @@ namespace BackEnd.Core.Services.Implementations
         {
             return await blogGroupRepository.GetEntityById(Id);
         }
+
+        public async Task<FilterBlogGroupDTO> GetFilterBlogGourps(FilterBlogGroupDTO filter)
+        {
+            var blogGroupQuery = blogGroupRepository.GetEntitiesQuery().AsQueryable();
+            if (!string.IsNullOrEmpty(filter.Title))
+            {
+                blogGroupQuery = blogGroupQuery.Where(b => b.Title.Contains(filter.Title));
+            }
+
+            var count = (int)Math.Ceiling(blogGroupQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
+            var pager = Pager.Build(count, filter.ActivePage, filter.TakeEntity);
+            var blogGroups = await blogGroupQuery.Paging(pager).ToListAsync();
+            var returnBlogGroups = new List<VmReturnBlogGroup>();
+            foreach (var blogGroup in blogGroups)
+            {
+                var vm = new VmReturnBlogGroup
+                {
+                    Id = blogGroup.Id,
+                    Description = blogGroup.Description,
+                    Title = blogGroup.Title
+                };
+                returnBlogGroups.Add(vm);
+            }
+            
+            return filter.SetBlogGroups(returnBlogGroups).SetPaging(pager);
+        }
+
 
         public async Task<BlogGroup> GetBlogGroupByTitleAsync(string Title)
         {
