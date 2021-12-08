@@ -29,17 +29,37 @@ namespace BackEnd.WebApi.Controllers.Admin
 
         #region Add BlogGroup
         [HttpPost("add-new-bloggroup")]
-        public async Task<IActionResult> AddBlogGroup([FromBody] BlogGroupDTO blogGroupDTO)
+        public async Task<IActionResult> AddBlogGroup([FromBody] BlogGroupDTO blogGroupDTO, [FromQuery] FilterBlogGroupDTO filter)
         {
             if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
+            if (await blogGroupService.CheckUniqueTitleAsync(blogGroupDTO.Title)) return JsonResponseStatus.Duplicate();
             if (!await blogGroupService.AddBlogGroup(blogGroupDTO)) return JsonResponseStatus.ServerError();
-            if (!await blogGroupService.CheckUniqueTitleAsync(blogGroupDTO.Title)) return JsonResponseStatus.Duplicate();
-            var returnBlogGroup = new VmReturnBlogGroup
-            {
-                Title = blogGroupDTO.Title,
-                Description = blogGroupDTO.Description
-            };
-            return JsonResponseStatus.Success(returnBlogGroup);
+            var blogGroups = await blogGroupService.GetFilterBlogGourps(filter);
+            return JsonResponseStatus.Success(blogGroups);
+        }
+        #endregion
+
+        #region Edit BlogGroup
+        [HttpPost("edit-bloggroup")]
+        public async Task<IActionResult> EditBlogGroup([FromBody] BlogGroupDTO blogGroupDTO, [FromQuery] FilterBlogGroupDTO filter)
+        {
+            if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
+            if (await blogGroupService.CheckUniqueTitleAsync(blogGroupDTO.Title)) return JsonResponseStatus.Duplicate();
+            if (!await blogGroupService.EditBlogGroup(blogGroupDTO)) return JsonResponseStatus.ServerError();
+            var blogGroups = await blogGroupService.GetFilterBlogGourps(filter);
+            return JsonResponseStatus.Success(blogGroups);
+        }
+        #endregion
+
+
+        #region Remove BlogGroup
+        [HttpPost("remove-bloggroup")]
+        public async Task<IActionResult> RemoveBlogGroup([FromBody] BlogGroupDTO blogGroupDTO, [FromQuery] FilterBlogGroupDTO filter)
+        {
+            if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
+            if (!await blogGroupService.RemoveBlogGroup(blogGroupDTO)) return JsonResponseStatus.ServerError();
+            var blogGroups = await blogGroupService.GetFilterBlogGourps(filter);
+            return JsonResponseStatus.Success(blogGroups);
         }
         #endregion
     }

@@ -38,14 +38,14 @@ namespace BackEnd.Core.Services.Implementations
 
         public async Task<FilterBlogGroupDTO> GetFilterBlogGourps(FilterBlogGroupDTO filter)
         {
-            var blogGroupQuery = blogGroupRepository.GetEntitiesQuery().AsQueryable();
+            var blogGroupQuery = blogGroupRepository.GetEntitiesQuery().OrderByDescending(b=>b.LastUpdateDate).AsQueryable();
             if (!string.IsNullOrEmpty(filter.Title))
             {
                 blogGroupQuery = blogGroupQuery.Where(b => b.Title.Contains(filter.Title));
             }
 
             var count = (int)Math.Ceiling(blogGroupQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
-            var pager = Pager.Build(count, filter.ActivePage, filter.TakeEntity);
+            var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var blogGroups = await blogGroupQuery.Paging(pager).ToListAsync();
             var returnBlogGroups = new List<VmReturnBlogGroup>();
             foreach (var blogGroup in blogGroups)
@@ -54,7 +54,8 @@ namespace BackEnd.Core.Services.Implementations
                 {
                     Id = blogGroup.Id,
                     Description = blogGroup.Description,
-                    Title = blogGroup.Title
+                    Title = blogGroup.Title,
+                    IsDelete = blogGroup.IsDelete
                 };
                 returnBlogGroups.Add(vm);
             }
@@ -65,7 +66,11 @@ namespace BackEnd.Core.Services.Implementations
 
         public async Task<BlogGroup> GetBlogGroupByTitleAsync(string Title)
         {
-            return  await blogGroupRepository.GetEntitiesQuery().Where(b => b.Title == Title).SingleOrDefaultAsync();
+         
+              return  await blogGroupRepository.GetEntitiesQuery().Where(b => b.Title == Title).SingleOrDefaultAsync();
+                 
+       
+         
         }
         #endregion
 
@@ -111,6 +116,31 @@ namespace BackEnd.Core.Services.Implementations
 
             oldBlogGroup.Title = blogGroupDTO.Title;
             oldBlogGroup.Description = blogGroupDTO.Description;
+
+
+            try
+            {
+                blogGroupRepository.UpdateEntity(oldBlogGroup);
+                await blogGroupRepository.SaveChanges();
+                return true;
+            }
+            catch
+            {
+
+                return false;
+            }
+        }
+
+        #endregion
+
+
+        #region Remove
+        public async Task<bool> RemoveBlogGroup(BlogGroupDTO blogGroupDTO)
+        {
+            var oldBlogGroup = await GetBlogGroupByIdAsync(blogGroupDTO.Id);
+
+            oldBlogGroup.IsDelete = !oldBlogGroup.IsDelete;
+ 
 
 
             try

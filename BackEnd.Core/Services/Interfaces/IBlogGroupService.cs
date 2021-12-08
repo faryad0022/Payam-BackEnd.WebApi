@@ -20,6 +20,9 @@ namespace BackEnd.Core.Services.Interfaces
 
         Task<bool> EditBlogGroup(BlogGroupDTO blogGroupDTO);
 
+        Task<bool> RemoveBlogGroup(BlogGroupDTO blogGroupDTO);
+
+
 
     }
 }

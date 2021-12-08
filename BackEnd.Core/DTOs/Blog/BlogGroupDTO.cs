@@ -7,7 +7,6 @@ namespace BackEnd.Core.DTOs.Blog
 {
     public class BlogGroupDTO
     {
-        [Required]
         public long Id { get; set; }
 
         [Display(Name = "عنوان")]
@@ -19,5 +18,8 @@ namespace BackEnd.Core.DTOs.Blog
         [Display(Name = "توضیحات")]
         [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
         public string Description { get; set; }
+
+        public bool IsDelete { get; set; }
+        
     }
 }
