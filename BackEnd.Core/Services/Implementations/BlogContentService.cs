@@ -1,5 +1,8 @@
 ﻿using BackEnd.Core.DTOs.Blog;
+using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Extensions.Paging;
+using BackEnd.Core.ViewModels.Blog;
 using BackEnd.DataLayer.Entities.Blog;
 using BackEnd.DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -50,10 +53,49 @@ namespace BackEnd.Core.Services.Implementations
             return await blogContentRepository.GetEntitiesQuery().Where(b => b.Title.Contains(Title)).ToListAsync();
 
         }
+
+        public async Task<FilterBlogDTO> GetFilterBlogs(FilterBlogDTO filter)
+        {
+            var blogQuery = blogContentRepository.GetEntitiesQuery().Where(bg=>!bg.BlogGroup.IsDelete).OrderByDescending(b => b.LastUpdateDate).AsQueryable();
+            if (!string.IsNullOrEmpty(filter.Title))
+            {
+                blogQuery = blogQuery.Where(b => b.Title.Contains(filter.Title));
+            }
+
+            var count = (int)Math.Ceiling(blogQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
+            var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
+            var blogs = await blogQuery.Paging(pager).ToListAsync();
+            var returnBlogs = new List<VmReturnBlog>();
+            foreach (var blog in blogs)
+            {
+                var vm = new VmReturnBlog
+                {
+                    Id = blog.Id,
+                    Title = blog.Title,
+                    IsDelete = blog.IsDelete,
+                    Tags = blog.Tags,
+                    ImageName = blog.ImageName,
+                    Text = blog.Text,
+                    BlogGroupId = blog.BlogGroupId,
+                    UserId = blog.UserId,
+                    UserName = blog.UserName,
+                    Status = blog.Status,
+                    IsSelected = blog.IsSelected,
+                    ViewCount = blog.ViewCount,
+                    BlogGroupName = blog.BlogGroupName
+
+                };
+                returnBlogs.Add(vm);
+            }
+
+            return filter.SetPaging(pager).SetBlogs(returnBlogs);
+        }
+
+
         #endregion
 
         #region Add
-        public async Task<bool> AddBlog(BlogContentDTO blogContentDTO)
+        public async Task<bool> AddBlogAsync(BlogContentDTO blogContentDTO)
         {
             var blogContent = new BlogContent
             {
@@ -66,7 +108,8 @@ namespace BackEnd.Core.Services.Implementations
                 ViewCount = blogContentDTO.ViewCount,
                 BlogGroupId = blogContentDTO.BlogGroupId,
                 UserId = blogContentDTO.UserId,
-                UserName = blogContentDTO.UserName
+                UserName = blogContentDTO.UserName,
+                BlogGroupName = blogContentDTO.BlogGroupName
             };
 
             try
@@ -75,7 +118,7 @@ namespace BackEnd.Core.Services.Implementations
                 await blogContentRepository.SaveChanges();
                 return true;
             }
-            catch
+            catch(Exception e)
             {
 
                 return false;
@@ -84,20 +127,18 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region Edit
-        public async Task<bool> EditBlog(BlogContentDTO blogContentDTO)
+        public async Task<bool> EditBlogAsync(BlogContentDTO blogContentDTO)
         {
             var oldBlogContent = await GetBlogByIdAsync(blogContentDTO.Id);
 
             oldBlogContent.Title = blogContentDTO.Title;
             oldBlogContent.ImageName = blogContentDTO.ImageName;
-            oldBlogContent.IsSelected = blogContentDTO.IsSelected;
-            oldBlogContent.Status = blogContentDTO.Status;
             oldBlogContent.Tags = blogContentDTO.Tags;
             oldBlogContent.Text = blogContentDTO.Text;
-            oldBlogContent.ViewCount = blogContentDTO.ViewCount;
             oldBlogContent.BlogGroupId = blogContentDTO.BlogGroupId;
             oldBlogContent.UserId = blogContentDTO.UserId;
             oldBlogContent.UserName = blogContentDTO.UserName;
+            oldBlogContent.BlogGroupName = blogContentDTO.BlogGroupName;
 
 
             try
@@ -112,24 +153,49 @@ namespace BackEnd.Core.Services.Implementations
                 return false;
             }
         }
-        public async Task<bool> ChangeBlogStatus(long blogId, bool status)
+
+
+        #endregion
+
+        #region Change status
+        public async Task<bool> ChangeBlogStatusAsync(long id)
         {
-            var blog = await GetBlogByIdAsync(blogId);
-            blog.Status = status;
+            var oldBlog = await GetBlogByIdAsync(id);
+
+            oldBlog.Status = !oldBlog.Status;
+
+
+
             try
             {
-                blogContentRepository.UpdateEntity(blog);
+                blogContentRepository.UpdateEntity(oldBlog);
                 await blogContentRepository.SaveChanges();
                 return true;
             }
-            catch 
+            catch
             {
 
                 return false;
             }
-
         }
 
+        #endregion
+
+        #region Delete
+        public async Task<bool> DeleteBlogAsync(long Id)
+        {
+            var blog = await GetBlogByIdAsync(Id);
+            try
+            {
+                blogContentRepository.DeleteEntity(blog);
+                await blogContentRepository.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         #endregion
 
         #region Unique

@@ -26,9 +26,31 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region Get
-        public async  Task<List<BlogGroup>> GetAllBlogGroupsAsync()
+        public async Task<List<VmReturnBlogGroup>> GetAllActiveBlogGroupsAsync()
         {
-            return await blogGroupRepository.GetEntitiesQuery().ToListAsync();
+            try
+            {
+                var blogGroups = await blogGroupRepository.GetEntitiesQuery().Where(b => !b.IsDelete).ToListAsync();
+                var returnBlogGroups = new List<VmReturnBlogGroup>();
+                foreach (var blogGroup in blogGroups)
+                {
+                    var vm = new VmReturnBlogGroup
+                    {
+                        Id = blogGroup.Id,
+                        Description = blogGroup.Description,
+                        Title = blogGroup.Title,
+                        IsDelete = blogGroup.IsDelete
+                    };
+                    returnBlogGroups.Add(vm);
+                }
+                return returnBlogGroups;
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
+
         }
 
         public async Task<BlogGroup> GetBlogGroupByIdAsync(long Id)
@@ -38,7 +60,7 @@ namespace BackEnd.Core.Services.Implementations
 
         public async Task<FilterBlogGroupDTO> GetFilterBlogGourps(FilterBlogGroupDTO filter)
         {
-            var blogGroupQuery = blogGroupRepository.GetEntitiesQuery().OrderByDescending(b=>b.LastUpdateDate).AsQueryable();
+            var blogGroupQuery = blogGroupRepository.GetEntitiesQuery().OrderByDescending(b => b.LastUpdateDate).AsQueryable();
             if (!string.IsNullOrEmpty(filter.Title))
             {
                 blogGroupQuery = blogGroupQuery.Where(b => b.Title.Contains(filter.Title));
@@ -59,18 +81,18 @@ namespace BackEnd.Core.Services.Implementations
                 };
                 returnBlogGroups.Add(vm);
             }
-            
+
             return filter.SetBlogGroups(returnBlogGroups).SetPaging(pager);
         }
 
 
         public async Task<BlogGroup> GetBlogGroupByTitleAsync(string Title)
         {
-         
-              return  await blogGroupRepository.GetEntitiesQuery().Where(b => b.Title == Title).SingleOrDefaultAsync();
-                 
-       
-         
+
+            return await blogGroupRepository.GetEntitiesQuery().Where(b => b.Title == Title).SingleOrDefaultAsync();
+
+
+
         }
         #endregion
 
@@ -98,7 +120,7 @@ namespace BackEnd.Core.Services.Implementations
                 await blogGroupRepository.SaveChanges();
                 return true;
             }
-            catch 
+            catch
             {
 
                 return false;
@@ -140,7 +162,7 @@ namespace BackEnd.Core.Services.Implementations
             var oldBlogGroup = await GetBlogGroupByIdAsync(blogGroupDTO.Id);
 
             oldBlogGroup.IsDelete = !oldBlogGroup.IsDelete;
- 
+
 
 
             try

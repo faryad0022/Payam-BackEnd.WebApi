@@ -14,6 +14,10 @@ namespace BackEnd.DataLayer.Entities.Blog
         [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
         public string UserName { get; set; }
 
+        [Display(Name = "نام گروه")]
+        [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
+        [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
+        public string BlogGroupName { get; set; }
 
         [Display(Name = "عنوان")]
         [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]

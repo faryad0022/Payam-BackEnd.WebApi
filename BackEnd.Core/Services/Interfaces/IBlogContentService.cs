@@ -14,13 +14,17 @@ namespace BackEnd.Core.Services.Interfaces
         Task<List<BlogContent>> GetAllBlogsByTagsAsync();
         Task<BlogContent> GetBlogByIdAsync(long Id);
         Task<List<BlogContent>> GetBlogByTitleAsync(string Title);
+        Task<FilterBlogDTO> GetFilterBlogs(FilterBlogDTO filter);
 
 
         Task<bool> CheckUniqueTitleAsync(string Title);
 
-        Task<bool> AddBlog(BlogContentDTO blogContentDTO);
+        Task<bool> AddBlogAsync(BlogContentDTO blogContentDTO);
 
-        Task<bool> EditBlog(BlogContentDTO blogContentDTO);
-        Task<bool> ChangeBlogStatus(long blogId,bool status);
+        Task<bool> EditBlogAsync(BlogContentDTO blogContentDTO);
+        Task<bool> ChangeBlogStatusAsync(long id);
+
+        Task<bool> DeleteBlogAsync(long Id);
+
     }
 }

@@ -8,13 +8,18 @@ namespace BackEnd.Core.DTOs.Blog
     public class BlogContentDTO
     {
         #region Properties
-        [Required]
+       // [Required]
         public long Id { get; set; }
 
         [Display(Name = "نویسنده")]
         [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
         [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
         public string UserName { get; set; }
+
+        [Display(Name = "نام گروه")]
+        [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
+        [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
+        public string BlogGroupName { get; set; }
 
 
         [Display(Name = "عنوان")]
@@ -27,10 +32,13 @@ namespace BackEnd.Core.DTOs.Blog
         [MaxLength(500, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
         public string Tags { get; set; }
 
+        [Display(Name = "نام فایل عکس بلاگ")]
+        public string ImageName { get; set; }
+
         [Display(Name = " تصویر بلاگ")]
         [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
-        [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
-        public string ImageName { get; set; }
+        //[MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
+        public string Base64Image { get; set; }
 
 
         [Display(Name = " متن")]
@@ -55,7 +63,7 @@ namespace BackEnd.Core.DTOs.Blog
         public long BlogGroupId { get; set; }
 
         [Display(Name = " شناسه کاربر")]
-        [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
+     //   [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
         public long UserId { get; set; }
         #endregion
     }

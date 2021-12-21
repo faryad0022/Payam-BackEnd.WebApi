@@ -25,6 +25,8 @@ namespace BackEnd.WebApi.Controllers.Admin
             var blogGroups = await blogGroupService.GetFilterBlogGourps(filter);
             return JsonResponseStatus.Success(blogGroups);
         }
+
+
         #endregion
 
         #region Add BlogGroup
@@ -43,8 +45,9 @@ namespace BackEnd.WebApi.Controllers.Admin
         [HttpPost("edit-bloggroup")]
         public async Task<IActionResult> EditBlogGroup([FromBody] BlogGroupDTO blogGroupDTO, [FromQuery] FilterBlogGroupDTO filter)
         {
+            var blogGroup = await blogGroupService.GetBlogGroupByIdAsync(blogGroupDTO.Id);
             if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
-            if (await blogGroupService.CheckUniqueTitleAsync(blogGroupDTO.Title)) return JsonResponseStatus.Duplicate();
+            if (await blogGroupService.CheckUniqueTitleAsync(blogGroupDTO.Title) && blogGroup.Title != blogGroupDTO.Title) return JsonResponseStatus.Duplicate();
             if (!await blogGroupService.EditBlogGroup(blogGroupDTO)) return JsonResponseStatus.ServerError();
             var blogGroups = await blogGroupService.GetFilterBlogGourps(filter);
             return JsonResponseStatus.Success(blogGroups);

@@ -1,4 +1,5 @@
 ﻿using BackEnd.Core.DTOs.Blog;
+using BackEnd.Core.ViewModels.Blog;
 using BackEnd.DataLayer.Entities.Blog;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,7 @@ namespace BackEnd.Core.Services.Interfaces
 {
     public interface IBlogGroupService: IDisposable
     {
-        Task<List<BlogGroup>> GetAllBlogGroupsAsync();
+        Task<List<VmReturnBlogGroup>> GetAllActiveBlogGroupsAsync();
         Task<BlogGroup> GetBlogGroupByIdAsync(long Id);
         Task<BlogGroup> GetBlogGroupByTitleAsync(string Title);
         Task<FilterBlogGroupDTO> GetFilterBlogGourps(FilterBlogGroupDTO filter);

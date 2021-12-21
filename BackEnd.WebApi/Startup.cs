@@ -80,7 +80,7 @@ namespace BackEnd.WebApi
             #region Application Services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISliderService, SliderService>();
-            services.AddScoped<IPasswordHelper,PasswordHelper>();
+            services.AddScoped<IPasswordHelper, PasswordHelper>();
             services.AddScoped<IMailSender, SendEmail>();
             services.AddScoped<IViewRenderService, RenderViewToString>();
             services.AddScoped<IImageGalleryService, ImageGaleryService>();
@@ -148,7 +148,12 @@ namespace BackEnd.WebApi
             #endregion
 
             app.UseCors(Configuration["Cors:PolicyString"]);
-
+            app.UseCors(p =>
+            p.WithOrigins("http://localhost:4200")
+             .AllowAnyHeader()
+             .AllowAnyMethod()
+             .WithExposedHeaders("ejUrl").WithExposedHeaders("ejUrlName")
+            );
             app.UseAuthentication();
 
             app.UseHttpsRedirection();
