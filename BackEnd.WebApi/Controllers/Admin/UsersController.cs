@@ -59,6 +59,9 @@ namespace BackEnd.WebApi.Controllers.Admin
             return JsonResponseStatus.Success(returnUsers);
         }
         #endregion
+
+
+        #region Change User Activation
         [HttpPost("change-user-activation")]
         public async Task<IActionResult> ChangeUserActivation([FromBody] UserDTO user, [FromQuery] FilterUserDTO filter)
         {
@@ -75,5 +78,27 @@ namespace BackEnd.WebApi.Controllers.Admin
             return JsonResponseStatus.Success(users);
 
         }
+        #endregion
+
+
+        #region Change User Ban State
+        [HttpPost("change-user-ban-state")]
+        public async Task<IActionResult> ChangeUserBanState([FromBody] UserDTO user, [FromQuery] FilterUserDTO filter)
+        {
+            if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
+            if (user == null) return JsonResponseStatus.NotFound();
+            var _user = await _userService.GetUserById(user.Id);
+            if (_user == null) return JsonResponseStatus.NotFound();
+
+            if (!await _userService.ChangeUserBanStatusAsync(_user)) return JsonResponseStatus.ServerError();
+
+
+            var users = await _userService.FilterUserssAsync(filter);
+
+            return JsonResponseStatus.Success(users);
+
+        }
+        #endregion
+
     }
 }

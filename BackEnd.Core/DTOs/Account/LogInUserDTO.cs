@@ -26,7 +26,8 @@ namespace BackEnd.Core.DTOs.Account
         {
             Success,
             Incorrect,
-            NotActive
+            NotActive,
+            Banned
         }
     }
 }

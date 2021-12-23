@@ -83,7 +83,21 @@ namespace BackEnd.Core.Services.Implementations
 
         }
 
+        public async Task<bool> ChangeUserBanStatusAsync(User user)
+        {
+            try
+            {
+                user.IsDelete = !user.IsDelete;
+                userRepository.UpdateEntity(user);
+                await userRepository.SaveChanges();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
 
+        }
         #endregion
 
 
@@ -130,6 +144,8 @@ namespace BackEnd.Core.Services.Implementations
                 return LogInUserResult.Incorrect;
             if (!user.IsActivated)
                 return LogInUserResult.NotActive;
+            if (user.IsDelete)
+                return LogInUserResult.Banned;
             return LogInUserResult.Success;
 
         }

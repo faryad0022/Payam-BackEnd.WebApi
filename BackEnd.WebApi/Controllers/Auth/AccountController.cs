@@ -108,6 +108,8 @@ namespace BackEnd.WebApi.Controllers.Auth
                         return JsonResponseStatus.NotFound(new { message = "اطلاعات وارد شده اشتباه است" });
                     case LogInUserDTO.LogInUserResult.NotActive:
                         return JsonResponseStatus.Error(new { message = "حساب کاربری فعال نشده است" });
+                    case LogInUserDTO.LogInUserResult.Banned:
+                        return JsonResponseStatus.Error(new { message = "با ادمین تماس بگیرید" });
                     case LogInUserDTO.LogInUserResult.Success:
                         var user = await userService.GetUserByEmailAsync(logIn.Email);
                         var tokenString = CreateToken(user.Email, user.Id);
