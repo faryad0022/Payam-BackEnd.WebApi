@@ -89,6 +89,7 @@ namespace BackEnd.WebApi
             services.AddScoped<IContactUsService, ContactUsService>();
             services.AddScoped<IBlogContentService, BlogContentService>();
             services.AddScoped<IBlogGroupService, BlogGroupService>();
+            services.AddScoped<IAppointmentService, AppointmentService>();
 
             #endregion
 
@@ -116,6 +117,7 @@ namespace BackEnd.WebApi
                     builder.AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowAnyOrigin()
+                    .WithExposedHeaders("ejUrl").WithExposedHeaders("ejUrlName")
                     //.AllowCredentials()
                     .Build();
                 });
@@ -148,12 +150,6 @@ namespace BackEnd.WebApi
             #endregion
 
             app.UseCors(Configuration["Cors:PolicyString"]);
-            app.UseCors(p =>
-            p.WithOrigins("http://localhost:4200")
-             .AllowAnyHeader()
-             .AllowAnyMethod()
-             .WithExposedHeaders("ejUrl").WithExposedHeaders("ejUrlName")
-            );
             app.UseAuthentication();
 
             app.UseHttpsRedirection();

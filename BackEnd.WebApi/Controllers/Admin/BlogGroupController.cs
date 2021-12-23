@@ -45,8 +45,11 @@ namespace BackEnd.WebApi.Controllers.Admin
         [HttpPost("edit-bloggroup")]
         public async Task<IActionResult> EditBlogGroup([FromBody] BlogGroupDTO blogGroupDTO, [FromQuery] FilterBlogGroupDTO filter)
         {
-            var blogGroup = await blogGroupService.GetBlogGroupByIdAsync(blogGroupDTO.Id);
+            if (blogGroupDTO == null) return JsonResponseStatus.NotFound();
+
             if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
+            var blogGroup = await blogGroupService.GetBlogGroupByIdAsync(blogGroupDTO.Id);
+
             if (await blogGroupService.CheckUniqueTitleAsync(blogGroupDTO.Title) && blogGroup.Title != blogGroupDTO.Title) return JsonResponseStatus.Duplicate();
             if (!await blogGroupService.EditBlogGroup(blogGroupDTO)) return JsonResponseStatus.ServerError();
             var blogGroups = await blogGroupService.GetFilterBlogGourps(filter);

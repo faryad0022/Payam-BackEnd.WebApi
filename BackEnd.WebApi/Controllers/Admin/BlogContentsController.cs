@@ -60,13 +60,7 @@ namespace BackEnd.WebApi.Controllers.Admin
             var imageName = Guid.NewGuid().ToString("N") + ".jpeg";
             imageFile.AddImageToServer(imageName, PathTools.BlogImageServerPath);
             blogContentDTO.ImageName = imageName;
-            var image = new ImageGalleryDTO
-            {
-                Base64Image = blogContentDTO.Base64Image,
-                ImageName = imageName,
-                Title = blogContentDTO.Title
-            };
-            if (!await imageGalleryService.UploadImageToGalleryAsync(image)) return JsonResponseStatus.ServerError();
+
 
             if (!await blogContentService.AddBlogAsync(blogContentDTO))
             {
@@ -108,13 +102,7 @@ namespace BackEnd.WebApi.Controllers.Admin
             var imageFile = ImageUploaderExtensions.Base64ToImage(imageBase64);
             var imageName = Guid.NewGuid().ToString("N") + ".jpeg";
             imageFile.AddImageToServer(imageName, PathTools.BlogContentImageServerPath);
-            var image = new ImageGalleryDTO
-            {
-                Base64Image = imageBase64,
-                ImageName = imageName,
-                Title = "دکتر پیام ابوالحسنی"
-            };
-            if (!await imageGalleryService.UploadImageToGalleryAsync(image)) return JsonResponseStatus.ServerError();
+
             var httpurl = string.Format("{0}://{1}{2}", Request.Scheme, Request.Host.Value, Request.PathBase.Value);
             var returnUrl = httpurl + "/images/blogcontent/origin/";
             Response.Headers.Add("ejUrl", returnUrl);

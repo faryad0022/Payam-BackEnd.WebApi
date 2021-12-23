@@ -1,14 +1,18 @@
-﻿using BackEnd.DataLayer.Entities.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace BackEnd.DataLayer.Entities.Site
+namespace BackEnd.Core.DTOs.Appointment
 {
-    public class Appointment: BaseEntity
+    public class AppointmentDTO
     {
         #region properties
+
+        public long Id { get; set; }
+
+        public bool IsDelete { get; set; } = false;
+
         [Display(Name = "نام")]
         [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
         [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
@@ -38,6 +42,8 @@ namespace BackEnd.DataLayer.Entities.Site
         [Display(Name = "یادداشت")]
         [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
         public string Note { get; set; }
+        public DateTime CreateDate { get; set; }
+        public DateTime LastUpdateDate { get; set; }
         #endregion
     }
 }

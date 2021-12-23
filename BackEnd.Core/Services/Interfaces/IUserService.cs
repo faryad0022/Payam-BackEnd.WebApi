@@ -12,6 +12,8 @@ namespace BackEnd.Core.Services.Interfaces
     public interface IUserService: IDisposable
     {
         Task<List<User>> GetAllUsersAsync();
+        Task<FilterUserDTO> FilterUserssAsync(FilterUserDTO filter);
+
         Task<RegisterUserResult> RegisterUserAsync(RegisterUserDTO register);
         Task<bool> IsUserExistByEmailAsync(string email);
         Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn);

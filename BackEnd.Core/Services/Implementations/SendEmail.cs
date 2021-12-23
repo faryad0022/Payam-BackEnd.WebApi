@@ -7,13 +7,13 @@ namespace BackEnd.Core.Services.Implementations
     {
         public void Send(string to, string subject, string body)
         {
-            var defaultEmail = "fabolhassani444@gmail.com";
+            var defaultEmail = "dr.p.abolhassani@gmail.com";
 
             var mail = new MailMessage();
 
             var SmtpServer = new SmtpClient("smtp.gmail.com");
 
-            mail.From = new MailAddress(defaultEmail, "فروشگاه انگولار");
+            mail.From = new MailAddress(defaultEmail, "وبسایت دکتر پیام ابوالحسنی");
 
             mail.To.Add(to);
 

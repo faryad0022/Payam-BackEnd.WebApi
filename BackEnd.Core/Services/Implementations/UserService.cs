@@ -1,7 +1,9 @@
 ﻿using BackEnd.Core.DTOs.Account;
+using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Security;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Convertors;
+using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.DataLayer.Entities.Account;
 using BackEnd.DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -34,6 +36,21 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region User Section
+
+        public async Task<FilterUserDTO> FilterUserssAsync(FilterUserDTO filter)
+        {
+            var usersQuery = userRepository.GetEntitiesQuery().OrderByDescending(s => s.CreateDate).AsQueryable();//فیلتر نزولی بر اساس تاریخ
+            if (!string.IsNullOrEmpty(filter.UserName))
+            {
+                usersQuery = usersQuery.Where(s => s.Email.Contains(filter.UserName));
+            }
+
+            var count = (int)Math.Ceiling(usersQuery.Count() / (double)filter.TakeEntity);// تعداد صفحات
+            var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
+            var users = await usersQuery.Paging(pager).ToListAsync();
+            return filter.SetUsers(users).SetPaging(pager);
+        }
+
         public async Task<List<User>> GetAllUsersAsync()
         {
             return await userRepository.GetEntitiesQuery().ToListAsync();

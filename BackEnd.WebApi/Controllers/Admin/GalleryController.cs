@@ -35,7 +35,7 @@ namespace BackEnd.WebApi.Controllers.Admin
 
         #region Add
         [HttpPost("add-new-image")]
-        public async Task<IActionResult> AddImageToGallery([FromBody]ImageGalleryDTO image)
+        public async Task<IActionResult> AddImageToGallery([FromBody]ImageGalleryDTO image, [FromQuery] FilterImageDTO filter)
         {
             if (image == null) return JsonResponseStatus.NotFound();
             if (string.IsNullOrEmpty(image.Base64Image)) return JsonResponseStatus.ModelError();
@@ -44,7 +44,8 @@ namespace BackEnd.WebApi.Controllers.Admin
             imageFile.AddImageToServer(imageName,PathTools.GalleryServerPath);
             image.ImageName = imageName;
             if(!await imageGalleryService.UploadImageToGalleryAsync(image)) return  JsonResponseStatus.ServerError();
-            return JsonResponseStatus.Success(image);
+            var gallery = await imageGalleryService.FilterImagesAsync(filter);
+            return JsonResponseStatus.Success(gallery);
         }
 
         #endregion

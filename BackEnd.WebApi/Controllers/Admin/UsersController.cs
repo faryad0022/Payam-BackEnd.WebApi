@@ -7,6 +7,7 @@ using BackEnd.Core.utilities.Common;
 using BackEnd.Core.ViewModels.Account;
 using BackEnd.WebApi.Controllers.Site;
 using Microsoft.Extensions.Logging.Abstractions;
+using BackEnd.Core.DTOs.Account;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
@@ -23,6 +24,17 @@ namespace BackEnd.WebApi.Controllers.Admin
         }
 
         #endregion
+
+
+        #region Get Users
+        [HttpGet("get-filter-users")]
+
+        public async Task<IActionResult> GetFilterUsers([FromQuery] FilterUserDTO filter)
+        {
+            var users = await _userService.FilterUserssAsync(filter);
+
+            return JsonResponseStatus.Success(users);
+        }
 
         [HttpGet("get-all-users")]
         public async Task<IActionResult> GetAllUsers()
@@ -46,25 +58,21 @@ namespace BackEnd.WebApi.Controllers.Admin
             }
             return JsonResponseStatus.Success(returnUsers);
         }
-
+        #endregion
         [HttpPost("change-user-activation")]
-        public async Task<IActionResult> ChangeUserActivation([FromBody]long id)
+        public async Task<IActionResult> ChangeUserActivation([FromBody] UserDTO user, [FromQuery] FilterUserDTO filter)
         {
-            var user = await _userService.GetUserById(id);
-            if (user==null) return JsonResponseStatus.NotFound();
-            if (!await _userService.ChangeUserActivationAsync(user)) return JsonResponseStatus.ServerError();
-            var editedUser = new VmReturnUser()
-            {
-                Id = user.Id,
-                IsActivated = user.IsActivated,
-                Email = user.Email,
-                Address = user.Address,
-                FirstName = user.FirstName,
-                LastName = user.FirstName,
-                IsDelete = user.IsDelete
+            if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
+            if (user == null) return JsonResponseStatus.NotFound();
+            var _user = await _userService.GetUserById(user.Id);
+            if (_user == null) return JsonResponseStatus.NotFound();
 
-            };
-            return JsonResponseStatus.Success(editedUser);
+            if (!await _userService.ChangeUserActivationAsync(_user)) return JsonResponseStatus.ServerError();
+
+
+            var users = await _userService.FilterUserssAsync(filter);
+
+            return JsonResponseStatus.Success(users);
 
         }
     }
