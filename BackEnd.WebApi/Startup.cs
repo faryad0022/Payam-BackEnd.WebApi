@@ -91,6 +91,7 @@ namespace BackEnd.WebApi
             services.AddScoped<IBlogGroupService, BlogGroupService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
 
+
             #endregion
 
             #region Authentication Setting
