@@ -34,6 +34,10 @@ namespace BackEnd.DataLayer.Entities.Site
         [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
         [MaxLength(500, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
         public string Description { get; set; }
+
+
+        [Display(Name = "وضعیت")]
+        public string Status { get; set; }
         #endregion
     }
 }

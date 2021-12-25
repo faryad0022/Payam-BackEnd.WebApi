@@ -1,13 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+
 
 namespace BackEnd.Core.DTOs.ContactUs
 {
     public class ContactUsDTO
     {
+
+
         #region Properties
+        [Display(Name = "شماره")]
+        public long Id { get; set; }
+
+        [Display(Name = "وضعیت")]
+        public string Status { get; set; }
+        [Display(Name = "تاریخ ارسال پیام")]
+
+        public DateTime CreateDate { get; set; }
+
+        [Display(Name = "حذف شده")]
+        public bool IsDelete { get; set; }
+
         [Display(Name = "عنوان")]
         [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]
         [MaxLength(100, ErrorMessage = "تعداد کاراکترهای {0} نمیتواند بیشتر از {1} باشد")]
@@ -41,6 +54,14 @@ namespace BackEnd.Core.DTOs.ContactUs
             ServerError,
             NotFound,
             Error
+        }
+        public enum ContactUsStatus
+        {
+            None,
+            NotSeen,
+            Seen,
+            Deleted,
+            Answered
         }
     }
 }
