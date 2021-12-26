@@ -2,6 +2,8 @@
 using BackEnd.DataLayer.Entities.Account;
 using BackEnd.DataLayer.Entities.Blog;
 using BackEnd.DataLayer.Entities.Gallery;
+using BackEnd.DataLayer.Entities.PhoneBook;
+using BackEnd.DataLayer.Entities.Settings;
 using BackEnd.DataLayer.Entities.Site;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -55,15 +57,9 @@ namespace BackEnd.DataLayer.Context
         public DbSet<BlogGroup> BlogGroups { get; set; }
         public DbSet<BlogContent> Blogs { get; set; }
         public DbSet<Logo> Logos { get; set; }
-
-
-
-
-
-
-
-
-
+        public DbSet<ContactList> ContactLists { get; set; }
+        public DbSet<About> About { get; set; }
+        public DbSet<Email> Email { get; set; }
 
         #endregion
     }

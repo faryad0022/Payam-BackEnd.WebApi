@@ -4,14 +4,16 @@ using BackEnd.DataLayer.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackEnd.DataLayer.Migrations
 {
     [DbContext(typeof(BackEndDbContext))]
-    partial class BackEndDbContextModelSnapshot : ModelSnapshot
+    [Migration("20211226070253_add contactlist and about entities")]
+    partial class addcontactlistandaboutentities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -342,55 +344,6 @@ namespace BackEnd.DataLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ContactLists");
-                });
-
-            modelBuilder.Entity("BackEnd.DataLayer.Entities.Settings.Email", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("CreateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("DefaultEmail")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("EmailPassword")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("EnableSsl")
-                        .HasMaxLength(100)
-                        .HasColumnType("bit");
-
-                    b.Property<string>("FromTitle")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("LastUpdateDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Port")
-                        .HasMaxLength(100)
-                        .HasColumnType("int");
-
-                    b.Property<string>("SmtpServer")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Email");
                 });
 
             modelBuilder.Entity("BackEnd.DataLayer.Entities.Site.About", b =>

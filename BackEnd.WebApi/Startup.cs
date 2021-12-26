@@ -91,7 +91,7 @@ namespace BackEnd.WebApi
             services.AddScoped<IBlogGroupService, BlogGroupService>();
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<ILogoService, LogoService>();
-
+            services.AddScoped<IAboutService, AboutService>();
 
             #endregion
 
