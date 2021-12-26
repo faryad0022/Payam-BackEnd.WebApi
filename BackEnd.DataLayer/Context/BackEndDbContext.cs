@@ -54,6 +54,8 @@ namespace BackEnd.DataLayer.Context
 
         public DbSet<BlogGroup> BlogGroups { get; set; }
         public DbSet<BlogContent> Blogs { get; set; }
+        public DbSet<Logo> Logos { get; set; }
+
 
 
 

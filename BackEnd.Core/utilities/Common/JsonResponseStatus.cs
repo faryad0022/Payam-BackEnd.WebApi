@@ -41,7 +41,14 @@ namespace BackEnd.Core.utilities.Common
         {
             return new JsonResult(new { status = "NotFound", data = returnData });
         }
-
+        public static JsonResult MustHaveOneItem()
+        {
+            return new JsonResult(new { status = "MustHaveOneItem" });
+        }
+        public static JsonResult MustHaveOneItem(object returnData)
+        {
+            return new JsonResult(new { status = "MustHaveOneItem", data = returnData });
+        }
         public static JsonResult Error()
         {
             return new JsonResult(new { status = "Error" });
