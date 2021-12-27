@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace BackEnd.WebApi.Controllers.Admin
 {
 
-    public class LogoController : SiteBaseController
+    public class LogoController : PanelBaseController
     {
         #region Constructor
         private readonly ILogoService logoService;

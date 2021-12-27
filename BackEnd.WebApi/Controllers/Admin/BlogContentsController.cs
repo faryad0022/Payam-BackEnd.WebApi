@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
-    public class BlogContentsController : SiteBaseController
+    public class BlogContentsController : PanelBaseController
     {
         #region Constructor
         private readonly IBlogGroupService blogGroupService;

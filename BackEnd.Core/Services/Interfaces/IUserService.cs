@@ -16,7 +16,7 @@ namespace BackEnd.Core.Services.Interfaces
 
         Task<RegisterUserResult> RegisterUserAsync(RegisterUserDTO register);
         Task<bool> IsUserExistByEmailAsync(string email);
-        Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn);
+        Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn, bool checkAdminRole = false);
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserById(long userId);
         Task ActivateUser(User user);

@@ -12,7 +12,7 @@ using BackEnd.WebApi.Controllers.Site;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
-    public class GalleryController : SiteBaseController
+    public class GalleryController : PanelBaseController
     {
         private readonly IImageGalleryService imageGalleryService;
 

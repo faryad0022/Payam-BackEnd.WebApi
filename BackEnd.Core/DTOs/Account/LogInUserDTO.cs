@@ -27,7 +27,8 @@ namespace BackEnd.Core.DTOs.Account
             Success,
             Incorrect,
             NotActive,
-            Banned
+            Banned,
+            NotAdmin
         }
     }
 }

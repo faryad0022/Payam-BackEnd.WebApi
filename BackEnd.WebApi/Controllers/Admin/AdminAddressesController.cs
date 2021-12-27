@@ -14,7 +14,7 @@ using BackEnd.WebApi.Controllers.Site;
 namespace BackEnd.WebApi.Controllers.Admin
 {
 
-    public class AdminAddressesController : SiteBaseController
+    public class AdminAddressesController : PanelBaseController
     {
         #region Constructor
 

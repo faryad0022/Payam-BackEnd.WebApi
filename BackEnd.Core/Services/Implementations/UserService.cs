@@ -4,6 +4,7 @@ using BackEnd.Core.Security;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Convertors;
 using BackEnd.Core.utilities.Extensions.Paging;
+using BackEnd.DataLayer.Entities.Access;
 using BackEnd.DataLayer.Entities.Account;
 using BackEnd.DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -20,13 +21,24 @@ namespace BackEnd.Core.Services.Implementations
     {
         #region Constructor
         private readonly IGenericRepository<User> userRepository;
+        private readonly IGenericRepository<UserRole> userRoleRepository;
+        private readonly IGenericRepository<Role> roleRepository;
+
         private IPasswordHelper passwordHelper;
         private IMailSender mailSender;
         private IViewRenderService viewRender;
 
-        public UserService(IGenericRepository<User> userRepository, IPasswordHelper passwordHelper, IMailSender mailSender, IViewRenderService viewRender)
+        public UserService(
+            IGenericRepository<User> userRepository,
+            IGenericRepository<UserRole> userRoleRepository,
+            IGenericRepository<Role> roleRepository,
+            IPasswordHelper passwordHelper,
+            IMailSender mailSender,
+            IViewRenderService viewRender)
         {
             this.userRepository = userRepository;
+            this.userRoleRepository = userRoleRepository;
+            this.roleRepository = roleRepository;
             this.passwordHelper = passwordHelper;
             this.mailSender = mailSender;
             this.viewRender = viewRender;
@@ -109,6 +121,26 @@ namespace BackEnd.Core.Services.Implementations
 
         }
 
+        public async Task SetUserRole(string email, string roleName)
+        {
+            var user = await userRepository.GetEntitiesQuery().Where(s => s.Email == email).SingleOrDefaultAsync();
+            var role = await roleRepository.GetEntitiesQuery().Where(s => s.Name == roleName).SingleOrDefaultAsync();
+            if(user != null && role!=null)
+            {
+                var userRole = new UserRole
+                {
+                    RoleId = role.Id,
+                    IsDelete = false,
+                    UserId = user.Id,
+                    User = user,
+                    Role = role
+                };
+                await userRoleRepository.AddEntity(userRole);
+                await userRoleRepository.SaveChanges();
+            }
+
+        }
+
         public async Task<RegisterUserResult> RegisterUserAsync(RegisterUserDTO register)
         {
             if (await IsUserExistByEmailAsync(register.Email))
@@ -119,12 +151,15 @@ namespace BackEnd.Core.Services.Implementations
                 {
                     Email = register.Email.SanitizeText(),
                     Password = passwordHelper.EncodePasswordMd5(register.Password),
-                    EmailActiveCode = Guid.NewGuid().ToString()
+                    EmailActiveCode = Guid.NewGuid().ToString(),
+                    
                 };
                 var body = await viewRender.RenderToStringAsync("Email/ActivateAccount", user);
                 mailSender.Send(user.Email, "فعال سازی حساب کاربری", body);
                 await userRepository.AddEntity(user);
                 await userRepository.SaveChanges();
+                await SetUserRole(user.Email, "User");
+
                 return RegisterUserResult.Success;
             }
             catch
@@ -136,16 +171,24 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region LogIn
-        public async Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn)
+        public async Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn, bool checkAdminRole)
         {
             var password = passwordHelper.EncodePasswordMd5(logIn.Password);
-            var user = await userRepository.GetEntitiesQuery().SingleOrDefaultAsync(u => u.Email == logIn.Email.ToLower().Trim() && u.Password == password);
+            var user = await userRepository.GetEntitiesQuery()
+                .SingleOrDefaultAsync(u => u.Email == logIn.Email.ToLower().Trim() && u.Password == password);
             if (user == null)
                 return LogInUserResult.Incorrect;
             if (!user.IsActivated)
                 return LogInUserResult.NotActive;
             if (user.IsDelete)
                 return LogInUserResult.Banned;
+            if (checkAdminRole)
+            {
+                var isUserAdmin = await userRoleRepository.GetEntitiesQuery()
+                    .Include(s=>s.Role)
+                    .AsQueryable().AnyAsync(s => s.UserId == user.Id && s.Role.Name == "Admin");
+                if (!isUserAdmin) return LogInUserResult.NotAdmin;
+            }
             return LogInUserResult.Success;
 
         }
@@ -198,6 +241,8 @@ namespace BackEnd.Core.Services.Implementations
         public void Dispose()
         {
             userRepository?.Dispose();
+            userRoleRepository?.Dispose();
+            roleRepository?.Dispose();
         }
         #endregion
     }

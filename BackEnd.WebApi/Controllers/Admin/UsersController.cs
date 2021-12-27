@@ -12,7 +12,7 @@ using BackEnd.Core.DTOs.Account;
 namespace BackEnd.WebApi.Controllers.Admin
 {
 
-    public class UsersController : SiteBaseController
+    public class UsersController : PanelBaseController
     {
         #region Constructor
 

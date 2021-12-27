@@ -7,20 +7,14 @@ using BackEnd.DataLayer.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace BackEnd.WebApi
 {
@@ -92,6 +86,7 @@ namespace BackEnd.WebApi
             services.AddScoped<IAppointmentService, AppointmentService>();
             services.AddScoped<ILogoService, LogoService>();
             services.AddScoped<IAboutService, AboutService>();
+            services.AddScoped<ICountNotificationService, CountNotificationService>();
 
             #endregion
 
@@ -150,7 +145,6 @@ namespace BackEnd.WebApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
             #endregion
-
             app.UseCors(Configuration["Cors:PolicyString"]);
             app.UseAuthentication();
 

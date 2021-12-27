@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
-    public class AboutController : SiteBaseController
+    public class AboutController : PanelBaseController
     {
         #region Constructor
         private readonly IAboutService aboutService;

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace BackEnd.WebApi.Controllers.Admin
 {
 
-    public class AppointmentController : SiteBaseController
+    public class AppointmentController : PanelBaseController
     {
 
         #region constructor

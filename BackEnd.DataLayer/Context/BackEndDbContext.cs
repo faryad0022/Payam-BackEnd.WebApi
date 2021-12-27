@@ -1,10 +1,12 @@
-﻿using BackEnd.DataLayer.Entities.Access;
+﻿using BackEnd.DataLayer.Configuration;
+using BackEnd.DataLayer.Entities.Access;
 using BackEnd.DataLayer.Entities.Account;
 using BackEnd.DataLayer.Entities.Blog;
 using BackEnd.DataLayer.Entities.Gallery;
 using BackEnd.DataLayer.Entities.PhoneBook;
 using BackEnd.DataLayer.Entities.Settings;
 using BackEnd.DataLayer.Entities.Site;
+using BackEnd.DataLayer.Extension;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,20 +15,28 @@ using System.Text;
 
 namespace BackEnd.DataLayer.Context
 {
-    public class BackEndDbContext: DbContext
+    public class BackEndDbContext : DbContext
     {
 
         #region Construcor
-        public BackEndDbContext(DbContextOptions<BackEndDbContext> options): base(options)
+        public BackEndDbContext(DbContextOptions<BackEndDbContext> options) : base(options)
         {
 
         }
         #endregion
 
 
-        #region disable cascading delete in data base
+        #region disable cascading delete in data base and seed data
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            #region Seed
+            modelBuilder.ApplyConfiguration(new RoleConfiguration());
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new UserRoleConfiguration());
+
+            #endregion
+
             var cascades = modelBuilder.Model.GetEntityTypes()
                 .SelectMany(t => t.GetForeignKeys())
                 .Where(fk => fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);

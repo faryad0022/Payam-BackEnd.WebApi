@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
-    public class SocialController : SiteBaseController
+    public class SocialController : PanelBaseController
     {
         #region Constructor
 

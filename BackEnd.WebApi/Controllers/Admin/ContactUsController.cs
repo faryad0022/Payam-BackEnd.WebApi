@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
-    public class ContactUsController : SiteBaseController
+    public class ContactUsController : PanelBaseController
     {
         #region Constructor
 

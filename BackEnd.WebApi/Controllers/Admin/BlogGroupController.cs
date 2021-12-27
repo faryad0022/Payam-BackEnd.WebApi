@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
-    public class BlogGroupController : SiteBaseController
+    public class BlogGroupController : PanelBaseController
     {
         #region Constructor
         private readonly IBlogGroupService blogGroupService;
