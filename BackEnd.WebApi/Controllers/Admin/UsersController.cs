@@ -29,7 +29,7 @@ namespace BackEnd.WebApi.Controllers.Admin
 
         #region Get Users
         [PermissionCheckerAttribute("Admin")]
-        [PermissionCheckerAttribute("SuperAdmin1")]
+        [PermissionCheckerAttribute("SuperAdmin")]
         [HttpGet("get-filter-users")]
 
         public async Task<IActionResult> GetFilterUsers([FromQuery] FilterUserDTO filter)
@@ -67,7 +67,7 @@ namespace BackEnd.WebApi.Controllers.Admin
 
         #region Change User Activation
         [PermissionCheckerAttribute("Admin")]
-        [PermissionCheckerAttribute("SuperAdmin1")]
+        [PermissionCheckerAttribute("SuperAdmin")]
         [HttpPost("change-user-activation")]
         public async Task<IActionResult> ChangeUserActivation([FromBody] UserDTO user, [FromQuery] FilterUserDTO filter)
         {
