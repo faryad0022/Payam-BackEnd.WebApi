@@ -87,6 +87,7 @@ namespace BackEnd.WebApi
             services.AddScoped<ILogoService, LogoService>();
             services.AddScoped<IAboutService, AboutService>();
             services.AddScoped<ICountNotificationService, CountNotificationService>();
+            services.AddScoped<IAccessService, AccessService>();
 
             #endregion
 

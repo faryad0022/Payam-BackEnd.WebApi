@@ -9,6 +9,7 @@ namespace BackEnd.DataLayer.Configuration
 {
     public class RoleConfiguration : IEntityTypeConfiguration<Role>
     {
+        //Seed Role Data to Table
         public void Configure(EntityTypeBuilder<Role> builder)
         {
             builder.ToTable("Roles");

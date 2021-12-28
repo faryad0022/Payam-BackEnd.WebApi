@@ -8,6 +8,7 @@ using BackEnd.Core.ViewModels.Account;
 using BackEnd.WebApi.Controllers.Site;
 using Microsoft.Extensions.Logging.Abstractions;
 using BackEnd.Core.DTOs.Account;
+using BackEnd.WebApi.Identity;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
@@ -27,6 +28,8 @@ namespace BackEnd.WebApi.Controllers.Admin
 
 
         #region Get Users
+        [PermissionCheckerAttribute("Admin")]
+        [PermissionCheckerAttribute("SuperAdmin1")]
         [HttpGet("get-filter-users")]
 
         public async Task<IActionResult> GetFilterUsers([FromQuery] FilterUserDTO filter)
@@ -35,7 +38,8 @@ namespace BackEnd.WebApi.Controllers.Admin
 
             return JsonResponseStatus.Success(users);
         }
-
+        [PermissionCheckerAttribute("Admin")]
+        [PermissionCheckerAttribute("SuperAdmin")]
         [HttpGet("get-all-users")]
         public async Task<IActionResult> GetAllUsers()
         {
@@ -62,6 +66,8 @@ namespace BackEnd.WebApi.Controllers.Admin
 
 
         #region Change User Activation
+        [PermissionCheckerAttribute("Admin")]
+        [PermissionCheckerAttribute("SuperAdmin1")]
         [HttpPost("change-user-activation")]
         public async Task<IActionResult> ChangeUserActivation([FromBody] UserDTO user, [FromQuery] FilterUserDTO filter)
         {
@@ -82,6 +88,8 @@ namespace BackEnd.WebApi.Controllers.Admin
 
 
         #region Change User Ban State
+        [PermissionCheckerAttribute("Admin")]
+        [PermissionCheckerAttribute("SuperAdmin")]
         [HttpPost("change-user-ban-state")]
         public async Task<IActionResult> ChangeUserBanState([FromBody] UserDTO user, [FromQuery] FilterUserDTO filter)
         {

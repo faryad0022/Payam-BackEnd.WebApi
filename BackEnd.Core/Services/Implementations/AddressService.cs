@@ -15,7 +15,7 @@ namespace BackEnd.Core.Services.Implementations
     {
         #region Constructor
 
-        private IGenericRepository<ContactAddress> addressRepository;
+        private readonly IGenericRepository<ContactAddress> addressRepository;
 
         public AddressService(IGenericRepository<ContactAddress> addressRepository)
         {

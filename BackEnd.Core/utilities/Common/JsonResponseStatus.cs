@@ -41,6 +41,7 @@ namespace BackEnd.Core.utilities.Common
         {
             return new JsonResult(new { status = "NotFound", data = returnData });
         }
+
         public static JsonResult Exist()
         {
             return new JsonResult(new { status = "Exist" });
@@ -49,6 +50,7 @@ namespace BackEnd.Core.utilities.Common
         {
             return new JsonResult(new { status = "Exist", data = returnData });
         }
+
         public static JsonResult MustHaveOneItem()
         {
             return new JsonResult(new { status = "MustHaveOneItem" });
@@ -57,6 +59,7 @@ namespace BackEnd.Core.utilities.Common
         {
             return new JsonResult(new { status = "MustHaveOneItem", data = returnData });
         }
+
         public static JsonResult Error()
         {
             return new JsonResult(new { status = "Error" });
@@ -73,6 +76,33 @@ namespace BackEnd.Core.utilities.Common
         public static JsonResult Duplicate(object returnData)
         {
             return new JsonResult(new { status = "Duplicate", data = returnData });
+        }
+
+        public static JsonResult NoAccess()
+        {
+            return new JsonResult(new { status = "NoAccess" });
+        }
+        public static JsonResult NoAccess(object returnData)
+        {
+            return new JsonResult(new { status = "NoAccess", data = returnData });
+        }
+
+        public static JsonResult NotActive()
+        {
+            return new JsonResult(new { status = "NotActive" });
+        }
+        public static JsonResult NotActive(object returnData)
+        {
+            return new JsonResult(new { status = "NotActive", data = returnData });
+        }
+
+        public static JsonResult BannedAccount()
+        {
+            return new JsonResult(new { status = "BannedAccount" });
+        }
+        public static JsonResult BannedAccount(object returnData)
+        {
+            return new JsonResult(new { status = "BannedAccount", data = returnData });
         }
     }
 }

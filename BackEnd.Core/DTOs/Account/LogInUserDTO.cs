@@ -28,7 +28,8 @@ namespace BackEnd.Core.DTOs.Account
             Incorrect,
             NotActive,
             Banned,
-            NotAdmin
+            NoRoles,
+            NoAccess
         }
     }
 }

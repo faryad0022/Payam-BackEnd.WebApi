@@ -1,4 +1,5 @@
-﻿using BackEnd.DataLayer.Entities.Common;
+﻿using BackEnd.DataLayer.Entities.Access;
+using BackEnd.DataLayer.Entities.Common;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,6 +21,7 @@ namespace BackEnd.Core.ViewModels.Account
         public bool IsActivated { get; set; }
         public string Token { get; set; }
         public int ExpireTime { get; set; }
+        public List<string> Roles { get; set; }
         #endregion
     }
 }

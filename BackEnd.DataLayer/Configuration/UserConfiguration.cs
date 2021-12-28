@@ -10,6 +10,8 @@ namespace BackEnd.DataLayer.Configuration
 {
     public class UserConfiguration: IEntityTypeConfiguration<User>
     {
+        //Seed User Data to Table
+
         public static string EncodePasswordMd5(string password) //Encrypt using MD5    
         {
             Byte[] originalBytes;

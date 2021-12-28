@@ -23,10 +23,9 @@ namespace BackEnd.Core.Services.Implementations
         private readonly IGenericRepository<User> userRepository;
         private readonly IGenericRepository<UserRole> userRoleRepository;
         private readonly IGenericRepository<Role> roleRepository;
-
-        private IPasswordHelper passwordHelper;
-        private IMailSender mailSender;
-        private IViewRenderService viewRender;
+        private readonly IPasswordHelper passwordHelper;
+        private readonly IMailSender mailSender;
+        private readonly IViewRenderService viewRender;
 
         public UserService(
             IGenericRepository<User> userRepository,
@@ -113,7 +112,6 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
 
-
         #region Register
         public async Task<bool> IsUserExistByEmailAsync(string email)
         {
@@ -121,25 +119,21 @@ namespace BackEnd.Core.Services.Implementations
 
         }
 
-        public async Task SetUserRole(string email, string roleName)
+        public async Task SetUserRole(User user, Role role)
         {
-            var user = await userRepository.GetEntitiesQuery().Where(s => s.Email == email).SingleOrDefaultAsync();
-            var role = await roleRepository.GetEntitiesQuery().Where(s => s.Name == roleName).SingleOrDefaultAsync();
-            if(user != null && role!=null)
+            var userRole = new UserRole
             {
-                var userRole = new UserRole
-                {
-                    RoleId = role.Id,
-                    IsDelete = false,
-                    UserId = user.Id,
-                    User = user,
-                    Role = role
-                };
-                await userRoleRepository.AddEntity(userRole);
-                await userRoleRepository.SaveChanges();
-            }
-
+                RoleId = role.Id,
+                IsDelete = false,
+                UserId = user.Id,
+                User = user,
+                Role = role
+            };
+            await userRoleRepository.AddEntity(userRole);
+            await userRoleRepository.SaveChanges();
         }
+
+
 
         public async Task<RegisterUserResult> RegisterUserAsync(RegisterUserDTO register)
         {
@@ -152,14 +146,12 @@ namespace BackEnd.Core.Services.Implementations
                     Email = register.Email.SanitizeText(),
                     Password = passwordHelper.EncodePasswordMd5(register.Password),
                     EmailActiveCode = Guid.NewGuid().ToString(),
-                    
+
                 };
                 var body = await viewRender.RenderToStringAsync("Email/ActivateAccount", user);
                 mailSender.Send(user.Email, "فعال سازی حساب کاربری", body);
                 await userRepository.AddEntity(user);
                 await userRepository.SaveChanges();
-                await SetUserRole(user.Email, "User");
-
                 return RegisterUserResult.Success;
             }
             catch
@@ -171,31 +163,55 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region LogIn
-        public async Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn, bool checkAdminRole)
+        public async Task<List<string>> GetUserRole(User user)
+        {
+            var userRole = await userRoleRepository.GetEntitiesQuery().Where(s => s.UserId == user.Id)
+
+                                                   .Include(s=>s.Role)
+                                                   .Select(s=>s.Role.Name)
+                                                   .AsQueryable()
+                                                   .ToListAsync();
+            return userRole;
+        }
+        public async Task<bool> CheckUserHasRoles(User user)
+        {
+            var userRoles = await GetUserRole(user);
+            var check = false;
+
+            foreach (var item in userRoles)
+            {
+                if (item == "Admin" || item == "SuperAdmin" || item == "Secreter" || item == "Blogger" || item == "Advertiser")
+                {
+                    check = true;
+                }
+            }
+            return check;
+        }
+
+        public async Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn)
         {
             var password = passwordHelper.EncodePasswordMd5(logIn.Password);
             var user = await userRepository.GetEntitiesQuery()
                 .SingleOrDefaultAsync(u => u.Email == logIn.Email.ToLower().Trim() && u.Password == password);
+
+            var userRoles = await GetUserRole(user);
+            //Checking User Roles ---- User Must have a role except user role
+            if (userRoles == null || userRoles.Count == 0) return LogInUserResult.NoRoles;
+            if (!await CheckUserHasRoles(user)) return LogInUserResult.NoAccess;
+
             if (user == null)
                 return LogInUserResult.Incorrect;
             if (!user.IsActivated)
                 return LogInUserResult.NotActive;
             if (user.IsDelete)
                 return LogInUserResult.Banned;
-            if (checkAdminRole)
-            {
-                var isUserAdmin = await userRoleRepository.GetEntitiesQuery()
-                    .Include(s=>s.Role)
-                    .AsQueryable().AnyAsync(s => s.UserId == user.Id && s.Role.Name == "Admin");
-                if (!isUserAdmin) return LogInUserResult.NotAdmin;
-            }
             return LogInUserResult.Success;
 
         }
         #endregion
 
         #region  ActivateUser
-        
+
         public async Task ActivateUser(User user)
         {
 
@@ -219,7 +235,7 @@ namespace BackEnd.Core.Services.Implementations
                 mailSender.Send(user.Email, "بازیابی کلمه عبور", body);
                 return true;
             }
-            catch(Exception e)
+            catch (Exception)
             {
                 return false;
             }

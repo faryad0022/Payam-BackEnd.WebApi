@@ -53,54 +53,54 @@ namespace BackEnd.DataLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 291, DateTimeKind.Local).AddTicks(6170),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 700, DateTimeKind.Local).AddTicks(8031),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 295, DateTimeKind.Local).AddTicks(9144),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 704, DateTimeKind.Local).AddTicks(8167),
                             Name = "Admin",
                             Title = "ادمین سایت"
                         },
                         new
                         {
                             Id = 2L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2344),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1407),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2393),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1443),
                             Name = "SuperAdmin",
                             Title = "سوپر ادمین"
                         },
                         new
                         {
                             Id = 3L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2443),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1491),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2449),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1497),
                             Name = "Secreter",
                             Title = "منشی"
                         },
                         new
                         {
                             Id = 4L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2454),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1502),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2458),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1506),
                             Name = "Blogger",
                             Title = "بلاگر"
                         },
                         new
                         {
                             Id = 5L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2462),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1510),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2466),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1514),
                             Name = "Advertiser",
                             Title = "تبلیغاتی"
                         },
                         new
                         {
                             Id = 6L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2470),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1519),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 296, DateTimeKind.Local).AddTicks(2474),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 705, DateTimeKind.Local).AddTicks(1523),
                             Name = "User",
                             Title = "کاربر معمولی"
                         });
@@ -140,54 +140,54 @@ namespace BackEnd.DataLayer.Migrations
                         new
                         {
                             Id = 1L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(69),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(6205),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(148),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(6294),
                             RoleId = 1L,
                             UserId = 1L
                         },
                         new
                         {
                             Id = 2L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1888),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7791),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1918),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7816),
                             RoleId = 2L,
                             UserId = 1L
                         },
                         new
                         {
                             Id = 3L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1943),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7840),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1948),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7845),
                             RoleId = 3L,
                             UserId = 1L
                         },
                         new
                         {
                             Id = 4L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1952),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7925),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1956),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7933),
                             RoleId = 4L,
                             UserId = 1L
                         },
                         new
                         {
                             Id = 5L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1960),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7937),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1963),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7940),
                             RoleId = 5L,
                             UserId = 1L
                         },
                         new
                         {
                             Id = 6L,
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1967),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7944),
                             IsDelete = false,
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 309, DateTimeKind.Local).AddTicks(1971),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 714, DateTimeKind.Local).AddTicks(7948),
                             RoleId = 6L,
                             UserId = 1L
                         });
@@ -247,13 +247,13 @@ namespace BackEnd.DataLayer.Migrations
                         {
                             Id = 1L,
                             Address = "کوی فراز - خیابان مینا - پلاک 5 - واحد 17",
-                            CreateDate = new DateTime(2021, 12, 28, 1, 28, 55, 298, DateTimeKind.Local).AddTicks(9198),
+                            CreateDate = new DateTime(2021, 12, 28, 2, 10, 5, 707, DateTimeKind.Local).AddTicks(6504),
                             Email = "mahancomputer49@gmail.com",
                             FirstName = "فریاد",
                             IsActivated = true,
                             IsDelete = false,
                             LastName = "ابوالحسنی",
-                            LastUpdateDate = new DateTime(2021, 12, 28, 1, 28, 55, 298, DateTimeKind.Local).AddTicks(9276),
+                            LastUpdateDate = new DateTime(2021, 12, 28, 2, 10, 5, 707, DateTimeKind.Local).AddTicks(6540),
                             Password = "21-C2-10-1A-38-F7-32-8A-67-E0-B6-E1-09-23-27-89"
                         });
                 });

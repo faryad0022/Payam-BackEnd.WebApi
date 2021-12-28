@@ -37,7 +37,7 @@ namespace BackEnd.Core.Services.Implementations
             return await blogContentRepository.GetEntitiesQuery().ToListAsync();
         }
 
-        public async Task<List<BlogContent>> GetAllBlogsByTagsAsync()
+        public  Task<List<BlogContent>> GetAllBlogsByTagsAsync()
         {
             throw new NotImplementedException();
         }
@@ -118,7 +118,7 @@ namespace BackEnd.Core.Services.Implementations
                 await blogContentRepository.SaveChanges();
                 return true;
             }
-            catch(Exception e)
+            catch (Exception)
             {
 
                 return false;

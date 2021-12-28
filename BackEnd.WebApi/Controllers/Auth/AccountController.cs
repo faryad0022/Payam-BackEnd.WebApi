@@ -15,7 +15,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using BackEnd.Core.ViewModels.Account;
-using Microsoft.AspNetCore.Authorization;
 using static BackEnd.Core.DTOs.Account.RegisterUserDTO;
 
 namespace BackEnd.WebApi.Controllers.Auth
@@ -55,6 +54,7 @@ namespace BackEnd.WebApi.Controllers.Auth
         }
 
         #endregion
+
         #region Register
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDTO register)
@@ -103,16 +103,45 @@ namespace BackEnd.WebApi.Controllers.Auth
                 var res = await userService.LoginUserAsync(logIn);
                 switch (res)
                 {
-
+                    case LogInUserDTO.LogInUserResult.NoRoles:
+                        return JsonResponseStatus.MustHaveOneItem(new { message = "شما از اعضای این سایت نمیباشید" });
+                    case LogInUserDTO.LogInUserResult.NoAccess:
+                        return JsonResponseStatus.NoAccess(new { message = "شما به این بخش دسترسی ندارید" });
                     case LogInUserDTO.LogInUserResult.Incorrect:
                         return JsonResponseStatus.NotFound(new { message = "اطلاعات وارد شده اشتباه است" });
                     case LogInUserDTO.LogInUserResult.NotActive:
-                        return JsonResponseStatus.Error(new { message = "حساب کاربری فعال نشده است" });
+                        return JsonResponseStatus.NotActive(new { message = "حساب کاربری فعال نشده است" });
                     case LogInUserDTO.LogInUserResult.Banned:
-                        return JsonResponseStatus.Error(new { message = "با ادمین تماس بگیرید" });
+                        return JsonResponseStatus.BannedAccount(new { message = "با ادمین تماس بگیرید" });
                     case LogInUserDTO.LogInUserResult.Success:
+
                         var user = await userService.GetUserByEmailAsync(logIn.Email);
-                        var tokenString = CreateToken(user.Email, user.Id);
+
+                        #region Create Token
+                        var claims = new List<Claim>
+                        {
+                            new Claim(ClaimTypes.Name, user.Email),
+                            new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                        };
+                        var roles = await userService.GetUserRole(user);
+                        foreach (var role in roles)
+                        {
+                            claims.Add(new Claim(ClaimTypes.Role, role));
+                        }
+
+                        claims.Add(new Claim(ClaimTypes.Role, "fake_Role"));
+                        var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(confiuration.GetValue<string>("Jwt:Key")));
+                        var signInCredential = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
+                        var tokenOptions = new JwtSecurityToken(
+                            issuer: confiuration.GetValue<string>("Jwt:Issuer"),
+                            claims: claims,
+                            expires: DateTime.Now.AddDays(30),
+                            signingCredentials: signInCredential
+
+                        );
+                        var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+                        #endregion
+
                         var returnUser = new VmReturnUser
                         {
                             Address = user.Address,
@@ -125,7 +154,8 @@ namespace BackEnd.WebApi.Controllers.Auth
                             LastName = user.LastName,
                             LastUpdateDate = user.LastUpdateDate,
                             Token = tokenString,
-                            ExpireTime = 30
+                            ExpireTime = 30,
+                            Roles = await userService.GetUserRole(user)
                         };
                         return JsonResponseStatus.Success(returnUser);
 
@@ -144,6 +174,11 @@ namespace BackEnd.WebApi.Controllers.Auth
             if (User.Identity.IsAuthenticated)
             {
                 var user = await userService.GetUserById(User.GetUserId());
+                var userRoles = await userService.GetUserRole(user);
+
+                if (userRoles == null || userRoles.Count == 0) return JsonResponseStatus.Error();
+                if (!await userService.CheckUserHasRoles(user)) return JsonResponseStatus.Error();
+
                 var tokenString = CreateToken(user.Email, user.Id);
 
                 var returnUser = new VmReturnUser
@@ -158,7 +193,9 @@ namespace BackEnd.WebApi.Controllers.Auth
                     LastName = user.LastName,
                     LastUpdateDate = user.LastUpdateDate,
                     ExpireTime = 30,
-                    Token = tokenString
+                    Token = tokenString,
+                    Roles = userRoles
+
                 };
                 return JsonResponseStatus.Success(returnUser);
             }

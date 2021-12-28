@@ -10,8 +10,8 @@ namespace BackEnd.DataLayer.Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : BaseEntity
     {
         #region Constructor
-        private BackEndDbContext context;
-        private DbSet<TEntity> dbSet;
+        private readonly BackEndDbContext context;
+        private readonly DbSet<TEntity> dbSet;
         public GenericRepository(BackEndDbContext context)
         {
             this.context = context;
