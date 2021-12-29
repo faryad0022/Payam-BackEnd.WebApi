@@ -44,6 +44,13 @@ namespace BackEnd.Core.DTOs.Appointment
         public string Note { get; set; }
         public DateTime CreateDate { get; set; }
         public DateTime LastUpdateDate { get; set; }
+
+        public enum AppointmentResult
+        {
+            Suuccess,
+            NotFound,
+            ServerError
+        }
         #endregion
     }
 }

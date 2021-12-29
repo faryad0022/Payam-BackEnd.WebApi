@@ -17,7 +17,7 @@ namespace BackEnd.Core.Services.Implementations
     {
         #region Constructor
 
-        private IGenericRepository<ImageGallery> imageRepository;
+        private readonly IGenericRepository<ImageGallery> imageRepository;
 
         public ImageGaleryService(IGenericRepository<ImageGallery> imageRepository)
         {

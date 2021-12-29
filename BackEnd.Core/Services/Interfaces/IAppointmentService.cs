@@ -13,6 +13,7 @@ namespace BackEnd.Core.Services.Interfaces
 
         Task<bool> DeleteAppointment(AppointmentDTO appointmentDTO);
         Task<bool> UpdateAppointment(AppointmentDTO appointmentDTO);
+        Task<AppointmentDTO.AppointmentResult> AddAppointment(AppointmentDTO appointmentDTO);
 
 
     }

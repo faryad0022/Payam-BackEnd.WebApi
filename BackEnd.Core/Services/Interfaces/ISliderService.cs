@@ -1,4 +1,5 @@
-﻿using BackEnd.DataLayer.Entities.Site;
+﻿using BackEnd.Core.DTOs.Sliders;
+using BackEnd.DataLayer.Entities.Site;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,8 +12,12 @@ namespace BackEnd.Core.Services.Interfaces
         Task<List<Slider>> GetAllSliders();
         Task<List<Slider>> GetAllActiveSliders();
         Task<Slider> GetSliderById(long id);
-        Task AddSlider(Slider slider);
-        Task UpdateSlider(Slider slider);
+        Task<FilterSliderDTO> GetAllSlidersFilterPagingAsync(FilterSliderDTO filter);
+
+        Task<SliderDTO.SliderResult> AddSliderAsync(SliderDTO sliderDTO);
+        Task<SliderDTO.SliderResult> UpdateSliderAsync(SliderDTO sliderDTO);
+
+
 
     }
 }

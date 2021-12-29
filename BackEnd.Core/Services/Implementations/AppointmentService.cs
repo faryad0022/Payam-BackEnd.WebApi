@@ -1,7 +1,9 @@
 ﻿using BackEnd.Core.DTOs.Appointment;
 using BackEnd.Core.DTOs.Paging;
+using BackEnd.Core.Security;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Extensions.Paging;
+using BackEnd.DataLayer.Entities.PhoneBook;
 using BackEnd.DataLayer.Entities.Site;
 using BackEnd.DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -17,10 +19,12 @@ namespace BackEnd.Core.Services.Implementations
     {
         #region constructor
 
-        private IGenericRepository<Appointment> appointmentRepository;
+        private readonly IGenericRepository<Appointment> appointmentRepository;
+        private readonly IGenericRepository<ContactList> contactRepository;
 
-        public AppointmentService(IGenericRepository<Appointment> appointmentRepository)
+        public AppointmentService(IGenericRepository<Appointment> appointmentRepository, IGenericRepository<ContactList> contactRepository)
         {
+            this.contactRepository = contactRepository;
             this.appointmentRepository = appointmentRepository;
         }
         #endregion
@@ -102,6 +106,38 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region Add
+        public async Task<AppointmentDTO.AppointmentResult> AddAppointment(AppointmentDTO appointmentDTO)
+        {
+            var appointment = new Appointment
+            {
+                CellPhone = appointmentDTO.CellPhone.SanitizeText(),
+                Email = appointmentDTO.Email.SanitizeText(),
+                Name = appointmentDTO.Name.SanitizeText(),
+                Telephone = appointmentDTO.Telephone.SanitizeText(),
+                Status = appointmentDTO.Status.SanitizeText()
+
+            };
+            var contactList = new ContactList
+            {
+                CellPhone = appointmentDTO.CellPhone.SanitizeText(),
+                Email = appointmentDTO.Email.SanitizeText(),
+                IsSelected = false,
+                Name = appointmentDTO.Name.SanitizeText(),
+                Telephone = appointmentDTO.Telephone.SanitizeText()
+            };
+            try
+            {
+                await contactRepository.AddEntity(contactList);
+                await appointmentRepository.AddEntity(appointment);
+                await appointmentRepository.SaveChanges();
+                return AppointmentDTO.AppointmentResult.Suuccess;
+            }
+            catch (Exception)
+            {
+
+                return AppointmentDTO.AppointmentResult.ServerError;
+            }
+        }
 
 
         #endregion
@@ -154,6 +190,7 @@ namespace BackEnd.Core.Services.Implementations
         #region Dispose
         public void Dispose()
         {
+            contactRepository?.Dispose();
             appointmentRepository?.Dispose();
         }
 
