@@ -54,7 +54,6 @@ namespace BackEnd.WebApi.Controllers.Admin
             if (socialDTO == null) return JsonResponseStatus.NotFound();
 
             if (!ModelState.IsValid) return JsonResponseStatus.ModelError();
-            var social = await socialService.GetSocialByIdAsync(socialDTO.Id);
 
             if (!await socialService.EditSocialAsync(socialDTO)) return JsonResponseStatus.ServerError();
             var socials = await socialService.GetSocialFilterPagingAsync(filter);

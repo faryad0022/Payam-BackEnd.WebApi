@@ -13,19 +13,29 @@ namespace BackEnd.Core.Services.Interfaces
     {
         Task<List<User>> GetAllUsersAsync();
         Task<FilterUserDTO> FilterUserssAsync(FilterUserDTO filter);
-        Task<RegisterUserResult> RegisterUserAsync(RegisterUserDTO register);
-        Task<bool> IsUserExistByEmailAsync(string email);
-        Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn);
-        Task<List<string>> GetUserRole(User user);
-        Task<bool> CheckUserHasRoles(User user);
         Task<User> GetUserByEmailAsync(string email);
         Task<User> GetUserById(long userId);
+        Task<List<RoleDTO>> GetUserRole(User user);
+        Task<Role> GetRoleByIdAsync(long roleId);
+        Task<List<RoleDTO>> GetRolesAsync();
+
+        Task<RegisterUserResult> RegisterUserAsync(RegisterUserDTO register);
+
+
+        Task<bool> IsUserExistByEmailAsync(string email);
+
+
+        Task<LogInUserResult> LoginUserAsync(LogInUserDTO logIn);
+
+
+        Task<bool> CheckUserHasRoles(User user);
+
         Task ActivateUser(User user);
         Task SetNewPassword(User user, string password);
         Task<bool> SendResetEmail(User user);
         Task<bool> ChangeUserActivationAsync(User user);
         Task<bool> ChangeUserBanStatusAsync(User user);
-        Task SetUserRole(User user, Role role);
+        Task<bool> SetUserRoleAsync(User user, Role role);
 
     }
 }

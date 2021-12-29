@@ -46,7 +46,7 @@ namespace BackEnd.Core.Services.Implementations
 
         #endregion
 
-        #region User Section
+        #region Get
 
         public async Task<FilterUserDTO> FilterUserssAsync(FilterUserDTO filter)
         {
@@ -61,7 +61,6 @@ namespace BackEnd.Core.Services.Implementations
             var users = await usersQuery.Paging(pager).ToListAsync();
             return filter.SetUsers(users).SetPaging(pager);
         }
-
         public async Task<List<User>> GetAllUsersAsync()
         {
             return await userRepository.GetEntitiesQuery().ToListAsync();
@@ -71,13 +70,109 @@ namespace BackEnd.Core.Services.Implementations
         {
             return await userRepository.GetEntitiesQuery().SingleOrDefaultAsync(u => u.Email == email.ToLower().Trim());
         }
-
-
         public async Task<User> GetUserById(long userId)
         {
             return await userRepository.GetEntityById(userId);
         }
+        public async Task<Role> GetRoleByIdAsync(long roleId)
+        {
+            return await roleRepository.GetEntitiesQuery().AsQueryable().SingleOrDefaultAsync(s => s.Id == roleId);
+        }
+        public async Task<List<RoleDTO>> GetRolesAsync()
+        {
+            var roles = await roleRepository.GetEntitiesQuery().Where(s => !s.IsDelete).ToListAsync();
+            var rolesDTO = new List<RoleDTO>();
+            foreach (var role in roles)
+            {
+                var vm = new RoleDTO
+                {
+                    Id = role.Id,
+                    Name = role.Name,
+                    Title = role.Title
+                };
+                rolesDTO.Add(vm);
+            }
+            return rolesDTO;
+        }
+        public async Task<bool> IsUserExistByEmailAsync(string email)
+        {
+            return await userRepository.GetEntitiesQuery().AnyAsync(u => u.Email == email.ToLower().Trim());
 
+        }
+        public async Task<List<RoleDTO>> GetUserRole(User user)
+        {
+            var userRoles = await userRoleRepository.GetEntitiesQuery().Where(s => s.UserId == user.Id)
+                                                   .Include(s => s.Role)
+                                                   .Select(s => s.Role)
+                                                   .AsQueryable()
+                                                   .ToListAsync();
+            var userRolsDTO = new List<RoleDTO>();
+            foreach (var role in userRoles)
+            {
+                var vm = new RoleDTO
+                {
+                    Id = role.Id,
+                    Name = role.Name,
+                    Title = role.Title
+                };
+                userRolsDTO.Add(vm);
+            }
+            return userRolsDTO;
+        }
+
+
+        #endregion
+
+        #region Set UserRole
+        public async Task<bool> SetUserRoleAsync(User user, Role role)
+        {
+            var hasRole = await userRoleRepository.GetEntitiesQuery().AsQueryable().AnyAsync(s => s.RoleId == role.Id && s.UserId == user.Id);
+            if (hasRole)
+            {
+                var existingUserRole = await userRoleRepository.GetEntitiesQuery()
+                                                               .AsQueryable()
+                                                               .SingleOrDefaultAsync(s => s.RoleId == role.Id && s.UserId == user.Id);
+                try
+                {
+                    userRoleRepository.DeleteEntity(existingUserRole);
+                    await userRoleRepository.SaveChanges();
+                    return true;
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+            }
+            else
+            {
+                var userRole = new UserRole
+                {
+                    RoleId = role.Id,
+                    IsDelete = false,
+                    UserId = user.Id,
+                    User = user,
+                    Role = role
+                };
+                try
+                {
+                    await userRoleRepository.AddEntity(userRole);
+                    await userRoleRepository.SaveChanges();
+                    return true;
+                }
+                catch (Exception)
+                {
+
+                    return false;
+                }
+            }
+
+
+        }
+
+        #endregion
+
+        #region Change User Activation and ban status
         public async Task<bool> ChangeUserActivationAsync(User user)
         {
             try
@@ -93,7 +188,6 @@ namespace BackEnd.Core.Services.Implementations
             }
 
         }
-
         public async Task<bool> ChangeUserBanStatusAsync(User user)
         {
             try
@@ -111,30 +205,7 @@ namespace BackEnd.Core.Services.Implementations
         }
         #endregion
 
-
         #region Register
-        public async Task<bool> IsUserExistByEmailAsync(string email)
-        {
-            return await userRepository.GetEntitiesQuery().AnyAsync(u => u.Email == email.ToLower().Trim());
-
-        }
-
-        public async Task SetUserRole(User user, Role role)
-        {
-            var userRole = new UserRole
-            {
-                RoleId = role.Id,
-                IsDelete = false,
-                UserId = user.Id,
-                User = user,
-                Role = role
-            };
-            await userRoleRepository.AddEntity(userRole);
-            await userRoleRepository.SaveChanges();
-        }
-
-
-
         public async Task<RegisterUserResult> RegisterUserAsync(RegisterUserDTO register)
         {
             if (await IsUserExistByEmailAsync(register.Email))
@@ -149,6 +220,8 @@ namespace BackEnd.Core.Services.Implementations
 
                 };
                 var body = await viewRender.RenderToStringAsync("Email/ActivateAccount", user);
+                var adminBody = await viewRender.RenderToStringAsync("Email/AlertAdminForNewRegistration", user);
+                mailSender.Send("mahancomputer49@gmail.com","حساب کاربری جدید", adminBody);
                 mailSender.Send(user.Email, "فعال سازی حساب کاربری", body);
                 await userRepository.AddEntity(user);
                 await userRepository.SaveChanges();
@@ -163,16 +236,7 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region LogIn
-        public async Task<List<string>> GetUserRole(User user)
-        {
-            var userRole = await userRoleRepository.GetEntitiesQuery().Where(s => s.UserId == user.Id)
 
-                                                   .Include(s=>s.Role)
-                                                   .Select(s=>s.Role.Name)
-                                                   .AsQueryable()
-                                                   .ToListAsync();
-            return userRole;
-        }
         public async Task<bool> CheckUserHasRoles(User user)
         {
             var userRoles = await GetUserRole(user);
@@ -180,7 +244,7 @@ namespace BackEnd.Core.Services.Implementations
 
             foreach (var item in userRoles)
             {
-                if (item == "Admin" || item == "SuperAdmin" || item == "Secreter" || item == "Blogger" || item == "Advertiser")
+                if (item.Name == "Admin" || item.Name == "SuperAdmin" || item.Name == "Secreter" || item.Name == "Blogger" || item.Name == "Advertiser")
                 {
                     check = true;
                 }

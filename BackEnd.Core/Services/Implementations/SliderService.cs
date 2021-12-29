@@ -13,7 +13,7 @@ namespace BackEnd.Core.Services.Implementations
     public class SliderService : ISliderService
     {
         #region Constructor
-        private IGenericRepository<Slider> sliderRepository;
+        private readonly IGenericRepository<Slider> sliderRepository;
         public SliderService(IGenericRepository<Slider> sliderRepository)
         {
             this.sliderRepository = sliderRepository;

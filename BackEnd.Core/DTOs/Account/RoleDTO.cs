@@ -6,5 +6,8 @@ namespace BackEnd.Core.DTOs.Account
 {
     public class RoleDTO
     {
+        public long Id { get; set; }
+        public string Name { get; set; }
+        public string Title { get; set; }
     }
 }

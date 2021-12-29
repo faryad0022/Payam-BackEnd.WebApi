@@ -9,7 +9,7 @@ namespace BackEnd.WebApi.Identity
 {
     public class PermissionCheckerAttribute : AuthorizeAttribute, IAuthorizationFilter
     {
-        private string _role;
+        private readonly string _role;
         private IAccessService _accessService;
         public PermissionCheckerAttribute(string role)
         {

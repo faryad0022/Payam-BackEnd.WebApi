@@ -26,18 +26,18 @@ namespace BackEnd.WebApi.Controllers.Admin
 
         #endregion
 
-
         #region Get Users
         [PermissionCheckerAttribute("Admin")]
         [PermissionCheckerAttribute("SuperAdmin")]
         [HttpGet("get-filter-users")]
-
         public async Task<IActionResult> GetFilterUsers([FromQuery] FilterUserDTO filter)
         {
             var users = await _userService.FilterUserssAsync(filter);
 
             return JsonResponseStatus.Success(users);
         }
+
+
         [PermissionCheckerAttribute("Admin")]
         [PermissionCheckerAttribute("SuperAdmin")]
         [HttpGet("get-all-users")]
@@ -64,6 +64,16 @@ namespace BackEnd.WebApi.Controllers.Admin
         }
         #endregion
 
+        #region Get All System Role
+        [PermissionCheckerAttribute("Admin")]
+        [PermissionCheckerAttribute("SuperAdmin")]
+        [HttpGet("get-system-roles")]
+        public async Task<IActionResult> GetAllSystemRoles()
+        {
+            var roles = await _userService.GetRolesAsync();
+            return JsonResponseStatus.Success(roles);
+        } 
+        #endregion
 
         #region Change User Activation
         [PermissionCheckerAttribute("Admin")]
@@ -105,6 +115,36 @@ namespace BackEnd.WebApi.Controllers.Admin
 
             return JsonResponseStatus.Success(users);
 
+        }
+        #endregion
+
+        #region  User Roles
+        [PermissionCheckerAttribute("Admin")]
+        [PermissionCheckerAttribute("SuperAdmin")]
+        [HttpPost("set-role/{roleId}")]
+        public async Task<IActionResult> SetUserRoles([FromBody] UserDTO userDTO, long roleId)
+        {
+            var user = await _userService.GetUserById(userDTO.Id);
+            if (user == null) return JsonResponseStatus.NotFound();
+
+            var role = await _userService.GetRoleByIdAsync(roleId);
+            if (role == null) return JsonResponseStatus.NotFound();
+
+            if (!await _userService.SetUserRoleAsync(user, role)) return JsonResponseStatus.ServerError();
+            return JsonResponseStatus.Success();
+        }
+
+
+        [PermissionCheckerAttribute("Admin")]
+        [PermissionCheckerAttribute("SuperAdmin")]
+        [HttpGet("get-user-roles/{userId}")]
+        public async Task<IActionResult> GetUserRole(long userId)
+        {
+            var user = await _userService.GetUserById(userId);
+            if (user == null) return JsonResponseStatus.NotFound();
+
+            var userRole = await _userService.GetUserRole(user);
+            return JsonResponseStatus.Success(userRole);
         }
         #endregion
 

@@ -13,7 +13,7 @@ namespace BackEnd.WebApi.Controllers.Site
     public class SliderController : SiteBaseController
     {
         #region Constructor
-        private ISliderService sliderService;
+        private readonly ISliderService sliderService;
         public SliderController(ISliderService sliderService)
         {
             this.sliderService = sliderService;

@@ -39,30 +39,27 @@ namespace BackEnd.Core.utilities.Convertors
             var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
             var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
 
-            using (var sw = new StringWriter())
+            using var sw = new StringWriter();
+            var viewResult = _razorViewEngine.FindView(actionContext, viewName, false);
+
+            if (viewResult.View == null)
             {
-                var viewResult = _razorViewEngine.FindView(actionContext, viewName, false);
-
-                if (viewResult.View == null)
-                {
-                    throw new ArgumentNullException($"{viewName} does not match any available view");
-                }
-
-                var viewDictionary =
-                    new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-                    {
-                        Model = model
-                    };
-
-                var viewContext =
-                    new ViewContext(actionContext, viewResult.View, viewDictionary,
-                        new TempDataDictionary(actionContext.HttpContext, _tempDataProvider), sw,
-                        new HtmlHelperOptions());
-
-                await viewResult.View.RenderAsync(viewContext);
-                var t = sw;
-                return sw.ToString();
+                throw new ArgumentNullException($"{viewName} does not match any available view");
             }
+
+            var viewDictionary =
+                new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                {
+                    Model = model
+                };
+
+            var viewContext =
+                new ViewContext(actionContext, viewResult.View, viewDictionary,
+                    new TempDataDictionary(actionContext.HttpContext, _tempDataProvider), sw,
+                    new HtmlHelperOptions());
+
+            await viewResult.View.RenderAsync(viewContext);
+            return sw.ToString();
         }
     }
 
@@ -78,31 +75,29 @@ namespace BackEnd.Core.utilities.Convertors
 
             controller.ViewData.Model = model;
 
-            using (var writer = new StringWriter())
+            using var writer = new StringWriter();
+            IViewEngine viewEngine =
+                controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as
+                    ICompositeViewEngine;
+            ViewEngineResult viewResult = viewEngine.FindView(controller.ControllerContext, viewName, !partial);
+
+            if (viewResult.Success == false)
             {
-                IViewEngine viewEngine =
-                    controller.HttpContext.RequestServices.GetService(typeof(ICompositeViewEngine)) as
-                        ICompositeViewEngine;
-                ViewEngineResult viewResult = viewEngine.FindView(controller.ControllerContext, viewName, !partial);
-
-                if (viewResult.Success == false)
-                {
-                    return $"A view with the name {viewName} could not be found";
-                }
-
-                ViewContext viewContext = new ViewContext(
-                    controller.ControllerContext,
-                    viewResult.View,
-                    controller.ViewData,
-                    controller.TempData,
-                    writer,
-                    new HtmlHelperOptions()
-                );
-
-                await viewResult.View.RenderAsync(viewContext);
-
-                return writer.GetStringBuilder().ToString();
+                return $"A view with the name {viewName} could not be found";
             }
+
+            ViewContext viewContext = new ViewContext(
+                controller.ControllerContext,
+                viewResult.View,
+                controller.ViewData,
+                controller.TempData,
+                writer,
+                new HtmlHelperOptions()
+            );
+
+            await viewResult.View.RenderAsync(viewContext);
+
+            return writer.GetStringBuilder().ToString();
         }
     }
 

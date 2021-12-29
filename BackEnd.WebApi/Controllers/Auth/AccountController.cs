@@ -126,7 +126,7 @@ namespace BackEnd.WebApi.Controllers.Auth
                         var roles = await userService.GetUserRole(user);
                         foreach (var role in roles)
                         {
-                            claims.Add(new Claim(ClaimTypes.Role, role));
+                            claims.Add(new Claim(ClaimTypes.Role, role.Name));
                         }
 
                         claims.Add(new Claim(ClaimTypes.Role, "fake_Role"));
