@@ -94,6 +94,24 @@ namespace BackEnd.Core.Services.Implementations
 
 
         }
+
+        public async Task<List<BlogGroupDTO>> GetActiveBlogGroups()
+        {
+            var blogGroups = await blogGroupRepository.GetEntitiesQuery().AsQueryable().Where(b => !b.IsDelete).ToListAsync();
+            var blogGroupList = new List<BlogGroupDTO>();
+            foreach (var item in blogGroups)
+            {
+                var blogGroup = new BlogGroupDTO 
+                {
+                    Title = item.Title,
+                    Description = item.Description,
+                    Id = item.Id
+                };
+                blogGroupList.Add(blogGroup);
+            }
+            return blogGroupList;
+        }
+
         #endregion
 
         #region UniqueTest

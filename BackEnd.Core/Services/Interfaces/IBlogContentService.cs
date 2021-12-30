@@ -16,6 +16,9 @@ namespace BackEnd.Core.Services.Interfaces
         Task<List<BlogContent>> GetBlogByTitleAsync(string Title);
         Task<FilterBlogDTO> GetFilterBlogs(FilterBlogDTO filter);
 
+        Task<List<SiteBlogDTO>> GetLatestBlogs();
+        Task<FilterSiteBlogDTO> GetSiteFilterBlogs(FilterSiteBlogDTO filter);
+
 
         Task<bool> CheckUniqueTitleAsync(string Title);
 

@@ -59,7 +59,7 @@ namespace BackEnd.Core.Services.Implementations
             var blogQuery = blogContentRepository.GetEntitiesQuery().Where(bg=>!bg.BlogGroup.IsDelete).OrderByDescending(b => b.LastUpdateDate).AsQueryable();
             if (!string.IsNullOrEmpty(filter.Title))
             {
-                blogQuery = blogQuery.Where(b => b.Title.Contains(filter.Title));
+                blogQuery = blogQuery.Include(s=>s.BlogGroup).Where(b => b.BlogGroup.Title == filter.Title);
             }
 
             var count = (int)Math.Ceiling(blogQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
@@ -92,6 +92,61 @@ namespace BackEnd.Core.Services.Implementations
         }
 
 
+        #endregion
+
+        #region Get For Site
+        public async Task<List<SiteBlogDTO>> GetLatestBlogs()
+        {
+            var blogs =  await blogContentRepository.GetEntitiesQuery().OrderByDescending(s => s.LastUpdateDate).Take(4).AsQueryable().ToListAsync();
+            var returnLastBlogsDTO = new List<SiteBlogDTO>();
+            foreach (var item in blogs)
+            {
+                var vm = new SiteBlogDTO
+                {
+                    BlogGroupId = item.BlogGroupId,
+                    BlogGroupName = item.BlogGroupName,
+                    ImageName = item.ImageName,
+                    Id = item.Id,
+                    Tags = item.Tags,
+                    Text = item.Text,
+                    Title = item.Title,
+                    ViewCount = item.ViewCount
+                };
+                returnLastBlogsDTO.Add(vm);
+            }
+            return returnLastBlogsDTO;
+        }
+        public async Task<FilterSiteBlogDTO> GetSiteFilterBlogs(FilterSiteBlogDTO filter)
+        {
+            var blogQuery = blogContentRepository.GetEntitiesQuery().Where(bg => !bg.BlogGroup.IsDelete).OrderByDescending(b => b.LastUpdateDate).AsQueryable();
+            if (!string.IsNullOrEmpty(filter.Title) && filter.Title != "All")
+            {
+                blogQuery = blogQuery.Include(s => s.BlogGroup).Where(b => b.BlogGroup.Title == filter.Title);
+            }
+
+            var count = (int)Math.Ceiling(blogQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
+            var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
+            var blogs = await blogQuery.Paging(pager).ToListAsync();
+            var returnBlogs = new List<SiteBlogDTO>();
+            foreach (var item in blogs)
+            {
+                var vm = new SiteBlogDTO
+                {
+                    BlogGroupId = item.BlogGroupId,
+                    BlogGroupName = item.BlogGroupName,
+                    ImageName = item.ImageName,
+                    Id = item.Id,
+                    Tags = item.Tags,
+                    Text = item.Text,
+                    Title = item.Title,
+                    ViewCount = item.ViewCount
+
+                };
+                returnBlogs.Add(vm);
+            }
+
+            return filter.SetPaging(pager).SetBlogs(returnBlogs);
+        }
         #endregion
 
         #region Add

@@ -14,6 +14,7 @@ namespace BackEnd.Core.Services.Interfaces
         Task<BlogGroup> GetBlogGroupByIdAsync(long Id);
         Task<BlogGroup> GetBlogGroupByTitleAsync(string Title);
         Task<FilterBlogGroupDTO> GetFilterBlogGourps(FilterBlogGroupDTO filter);
+        Task<List<BlogGroupDTO>> GetActiveBlogGroups();
 
         Task<bool> CheckUniqueTitleAsync(string Title);
 
