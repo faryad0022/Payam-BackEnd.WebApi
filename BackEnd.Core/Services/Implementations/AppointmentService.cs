@@ -2,6 +2,7 @@
 using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Security;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Convertors;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.DataLayer.Entities.PhoneBook;
 using BackEnd.DataLayer.Entities.Site;
@@ -21,11 +22,21 @@ namespace BackEnd.Core.Services.Implementations
 
         private readonly IGenericRepository<Appointment> appointmentRepository;
         private readonly IGenericRepository<ContactList> contactRepository;
+        private readonly IMailSender mailSender;
+        private readonly IViewRenderService viewRender;
 
-        public AppointmentService(IGenericRepository<Appointment> appointmentRepository, IGenericRepository<ContactList> contactRepository)
+
+        public AppointmentService(
+            IGenericRepository<Appointment> appointmentRepository,
+            IGenericRepository<ContactList> contactRepository,
+            IMailSender mailSender,
+            IViewRenderService viewRender
+            )
         {
             this.contactRepository = contactRepository;
             this.appointmentRepository = appointmentRepository;
+            this.mailSender = mailSender;
+            this.viewRender = viewRender;
         }
         #endregion
 
@@ -125,11 +136,16 @@ namespace BackEnd.Core.Services.Implementations
                 Name = appointmentDTO.Name.SanitizeText(),
                 Telephone = appointmentDTO.Telephone.SanitizeText()
             };
+
             try
             {
                 await contactRepository.AddEntity(contactList);
                 await appointmentRepository.AddEntity(appointment);
                 await appointmentRepository.SaveChanges();
+
+                var body = await viewRender.RenderToStringAsync("Email/NewRequest", contactList);
+                mailSender.Send("mahancomputer49@gmail.com", "درخواست مشاوره جدید", body);
+                mailSender.Send("payamabolhassani52@gmail.com", "درخواست مشاوره جدید", body);
                 return AppointmentDTO.AppointmentResult.Suuccess;
             }
             catch (Exception)

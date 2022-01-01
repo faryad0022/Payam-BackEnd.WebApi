@@ -1,0 +1,30 @@
+.container, .navbar-static-top .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
+ width:1170px !important;
+
+}
+
+.testimonials {
+  background: url(../images/dubai.png) rgb(0,153,204) ;
+}
+
+.navbar {
+	float: none;
+}
+
+.socials img {
+	max-width: 200px !important;
+}
+
+.bx-viewport {
+	height: 230px !important;
+}
+
+.captcha img{
+  margin-left: 10px;
+  }
+
+  .moving-content .desc {position: static;}
+
+div.description {position: absolute ;}
+
+

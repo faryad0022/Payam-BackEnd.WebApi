@@ -7,11 +7,11 @@ namespace BackEnd.Core.Services.Implementations
     {
         public void Send(string to, string subject, string body)
         {
-            var defaultEmail = "dr.p.abolhassani@gmail.com";
+            var defaultEmail = "info@dr-payamabolhassani.com";
 
             var mail = new MailMessage();
 
-            var SmtpServer = new SmtpClient("smtp.gmail.com");
+            var SmtpServer = new SmtpClient("mail.dr-payamabolhassani.com");
 
             mail.From = new MailAddress(defaultEmail, "وبسایت دکتر پیام ابوالحسنی");
 
@@ -27,11 +27,11 @@ namespace BackEnd.Core.Services.Implementations
             // attachment = new System.Net.Mail.Attachment("c:/textfile.txt");
             // mail.Attachments.Add(attachment);
 
-            SmtpServer.Port = 587;
+            SmtpServer.Port = 25;
 
-            SmtpServer.Credentials = new System.Net.NetworkCredential(defaultEmail, "Olomfonon1379");
+            SmtpServer.Credentials = new System.Net.NetworkCredential(defaultEmail, "P@yam4257613");
 
-            SmtpServer.EnableSsl = true;
+            SmtpServer.EnableSsl = false;
 
             SmtpServer.Send(mail);
         }

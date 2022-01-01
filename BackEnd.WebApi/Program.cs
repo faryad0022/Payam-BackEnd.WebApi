@@ -1,12 +1,7 @@
 using BackEnd.DataLayer.Extension;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace BackEnd.WebApi
 {
@@ -16,8 +11,8 @@ namespace BackEnd.WebApi
         {
             CreateHostBuilder(args)
                 .Build()
-                .MigrateDatabase()
                 .Run();
+
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

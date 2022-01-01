@@ -3,10 +3,27 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>90ef7c42-87d1-41be-b087-013cebd9557a</UserSecretsId>
+	<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
     <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
   </PropertyGroup>
+	<PropertyGroup>
+		<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
+	</PropertyGroup>
 
+	<ItemGroup>
+	  <Compile Remove="app\**" />
+	  <Compile Remove="panel\**" />
+	  <Content Remove="app\**" />
+	  <Content Remove="panel\**" />
+	  <EmbeddedResource Remove="app\**" />
+	  <EmbeddedResource Remove="panel\**" />
+	  <None Remove="app\**" />
+	  <None Remove="panel\**" />
+	</ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Elmah.Io.AspNetCore" Version="4.1.37" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.19" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.22" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.22" />
@@ -27,7 +44,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\images\logo\origin\" />
+	  <Folder Include="wwwroot\panel\" />
+	  <Folder Include="wwwroot\app\" />
+	  <Folder Include="wwwroot\images\logo\origin\" />
   </ItemGroup>
 
 

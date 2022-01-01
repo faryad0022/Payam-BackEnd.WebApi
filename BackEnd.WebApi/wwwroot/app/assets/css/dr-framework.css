@@ -1,0 +1,203 @@
+  /*!
+ * Dark Framewrok v1.0.0
+ * Dedicated to 1170px
+ * Copyleft 2013
+ * Licensed under Astrit Bublaku
+ */
+    .wrapper {
+       width:1170px;
+       margin:0 auto;
+       display:block;
+   }
+
+    .dark [class*="column"]:first-child {
+        margin-right: 0;
+    }
+
+   .dark [class*="column"] {
+        float: right;
+        min-height: 1px;
+        margin-right: 30px;
+    }
+
+
+  .column12 {
+    width: 100%;
+    *width: 99.94680851063829%;
+  }
+  .column11 {
+    width: 91.45299145299145%;
+    *width: 91.39979996362975%;
+  }
+  .column10 {
+    width: 82.90598290598291%;
+    *width: 82.8527914166212%;
+  }
+  .column9 {
+    width: 74.35897435897436%;
+    *width: 74.30578286961266%;
+  }
+  .column8 {
+    width: 65.81196581196582%;
+    *width: 65.75877432260411%;
+  }
+  .column7 {
+    width: 57.26495726495726%;
+    *width: 57.21176577559556%;
+  }
+  .column6 {
+    width: 48.717948717948715%;
+    *width: 48.664757228587014%;
+  }
+  .column5 {
+    width: 40.17094017094017%;
+    *width: 40.11774868157847%;
+  }
+  .column4 {
+    width: 31.623931623931625%;
+    *width: 31.570740134569924%;
+  }
+  .column3 {
+    width: 23.076923076923077%;
+    *width: 23.023731587561375%;
+  }
+  .column2 {
+    width: 14.52991452991453%;
+    *width: 14.476723040552828%;
+  }
+  .column1 {
+    width: 5.982905982905983%;
+    *width: 5.929714493544281%;
+  }
+
+
+
+@media screen and (max-width:1170px) {
+
+    .wrapper {
+        width:940px;
+        margin:0 auto;
+        display:block;
+    }
+
+    .dark [class*="column"] {
+  float: right;
+  min-height: 1px;
+  margin-right: 24px;
+  }
+
+}
+/* for 980px or less */
+@media screen and (max-width:980px) {
+
+  .wrapper {
+      width:724px;
+      margin:0 auto;
+      display:block;
+  }
+
+    .dark [class*="column"]:first-child {
+        margin-right: 0;
+    }
+
+   .dark [class*="column"] {
+        float: right;
+        min-height: 1px;
+        margin-right: 20px;
+    }
+
+
+.column12 {
+    width: 100%;
+    *width: 99.94680851063829%;
+  }
+  .column11 {
+    width: 91.43646408839778%;
+    *width: 91.38327259903608%;
+  }
+  .column10 {
+    width: 82.87292817679558%;
+    *width: 82.81973668743387%;
+  }
+  .column9 {
+    width: 74.30939226519337%;
+    *width: 74.25620077583166%;
+  }
+  .column8 {
+    width: 65.74585635359117%;
+    *width: 65.69266486422946%;
+  }
+  .column7 {
+    width: 57.18232044198895%;
+    *width: 57.12912895262725%;
+  }
+  .column6 {
+    width: 48.61878453038674%;
+    *width: 48.56559304102504%;
+  }
+  .column5 {
+    width: 40.05524861878453%;
+    *width: 40.00205712942283%;
+  }
+  .column4 {
+    width: 31.491712707182323%;
+    *width: 31.43852121782062%;
+  }
+  .column3 {
+    width: 22.92817679558011%;
+    *width: 22.87498530621841%;
+  }
+  .column2 {
+    width: 14.3646408839779%;
+    *width: 14.311449394616199%;
+  }
+  .column1 {
+    width: 5.801104972375691%;
+    *width: 5.747913483013988%;
+  }
+ 
+}
+/* for 700px or less */
+@media screen and (max-width:700px) {
+
+    .wrapper {
+        width:460px;
+        margin:0 auto;
+        display:block;
+    }
+
+    .dark [class*="column"]:first-child {
+        margin-right: 0;
+    }
+
+   .dark [class*="column"] {
+        float: none;
+        min-height: 1px;
+        margin-right: 0px;
+    }
+
+  .column12 ,
+  .column11 ,
+  .column10 ,
+  .column9 ,
+  .column8 ,
+  .column7 ,
+  .column6 ,
+  .column5 ,
+  .column4 ,
+  .column3 ,
+  .column2 ,
+  .column1 {  width: 100%;  }
+
+}
+/* for 480px or less */
+@media screen and (max-width:480px) {
+
+    .wrapper {
+        width:300px;
+        margin:0 auto;
+        display:block;
+    }
+
+}
+

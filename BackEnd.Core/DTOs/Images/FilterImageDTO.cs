@@ -6,7 +6,7 @@ namespace BackEnd.Core.DTOs.Images
 {
     public class FilterImageDTO: BasePaging
     {
-        public string Title { get; set; }
+        public string Title { get; set; } = "";
         public List<ImageGallery> Images { get; set; }
 
         public FilterImageDTO SetPaging(BasePaging paging)

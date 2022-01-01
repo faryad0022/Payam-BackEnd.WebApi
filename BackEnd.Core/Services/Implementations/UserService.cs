@@ -257,14 +257,14 @@ namespace BackEnd.Core.Services.Implementations
             var password = passwordHelper.EncodePasswordMd5(logIn.Password);
             var user = await userRepository.GetEntitiesQuery()
                 .SingleOrDefaultAsync(u => u.Email == logIn.Email.ToLower().Trim() && u.Password == password);
-
+            if (user == null)
+                return LogInUserResult.Incorrect;
             var userRoles = await GetUserRole(user);
             //Checking User Roles ---- User Must have a role except user role
             if (userRoles == null || userRoles.Count == 0) return LogInUserResult.NoRoles;
             if (!await CheckUserHasRoles(user)) return LogInUserResult.NoAccess;
 
-            if (user == null)
-                return LogInUserResult.Incorrect;
+
             if (!user.IsActivated)
                 return LogInUserResult.NotActive;
             if (user.IsDelete)

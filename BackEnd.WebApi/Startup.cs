@@ -3,12 +3,21 @@ using BackEnd.Core.Services.Implementations;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Convertors;
 using BackEnd.Core.utilities.Extensions.Connection;
+using BackEnd.DataLayer.Context;
 using BackEnd.DataLayer.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
+using Microsoft.AspNetCore.Rewrite;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -32,6 +41,7 @@ namespace BackEnd.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             services.AddSingleton<IConfiguration>(
                 new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
@@ -67,8 +77,11 @@ namespace BackEnd.WebApi
             #endregion
 
             #region Add DbContext
-            services.AddApplicationDbContext(Configuration);
-            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            services.AddDbContext<BackEndDbContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("Production"));
+
+            }); services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             #endregion
 
             #region Application Services
@@ -121,13 +134,27 @@ namespace BackEnd.WebApi
                 });
             });
             #endregion
+
+
             services.AddControllers();
             services.AddControllersWithViews();
             services.AddRazorPages();
-            
+            services.AddMvc();
+            services.AddElmahIo(o =>
+            {
+                o.ApiKey = "11daace02f3d4a348002f48d8723bda8";
+                o.LogId = new Guid("f23c2df8-a961-4a50-a75c-92e208dd0369");
+            });
+            services.AddResponseCompression(opt => opt.Providers.Add<GzipCompressionProvider>());
+            #region Publish Section
+            services.AddSpaStaticFiles();
+                
+            #endregion
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -136,6 +163,8 @@ namespace BackEnd.WebApi
 
                 app.UseDeveloperExceptionPage();
             }
+
+
             #region swagger
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -149,7 +178,7 @@ namespace BackEnd.WebApi
             #endregion
             app.UseCors(Configuration["Cors:PolicyString"]);
             app.UseAuthentication();
-
+            app.UseElmahIo();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -157,19 +186,51 @@ namespace BackEnd.WebApi
             app.UseRouting();
 
             app.UseAuthorization();
-
-            app.UseEndpoints(endpoints =>
+            app.UseSpaStaticFiles(new StaticFileOptions
             {
-                endpoints.MapControllers();
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
             });
 
-            //app.UseMvc(routes =>
-            //{
-            //    routes.MapRoute(
-            //        name: "default",
-            //        template:"{controller=users}/{action=users}/{is?}"
-            //        );
-            //});
+            app.UseEndpoints(end =>
+            {
+                end.MapControllers();
+                end.MapControllerRoute(
+                   name: "default",
+                   pattern: "{controller=home}/{action=index}");
+            });
+            #region Publish Section
+            //
+            app.UseRewriter(new RewriteOptions().AddRedirect(@"^\s*$", "/app/", 301));
+
+            app.Map("/app", site =>
+            {
+                site.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "wwwroot/app/";
+                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/app"))
+                    };
+                    //spa.UseSpaPrerendering(options =>
+                    //{
+                    //    options.BootModulePath = $"{spa.Options.SourcePath}/dist-server/main.js";
+                    //    options.ExcludeUrls = new[] { "/sockjs-node" };
+                    //});
+                });
+            }).Map("/panel", panel =>
+            {
+                panel.UseSpa(spa =>
+                {
+                    spa.Options.SourcePath = "wwwroot/panel/";
+                    spa.Options.DefaultPageStaticFileOptions = new StaticFileOptions
+                    {
+                        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/panel"))
+                    };
+                });
+            });
+
+            #endregion
+
         }
     }
 }
