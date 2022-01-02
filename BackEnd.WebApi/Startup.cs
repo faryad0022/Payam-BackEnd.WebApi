@@ -2,18 +2,13 @@ using BackEnd.Core.Security;
 using BackEnd.Core.Services.Implementations;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Convertors;
-using BackEnd.Core.utilities.Extensions.Connection;
 using BackEnd.DataLayer.Context;
 using BackEnd.DataLayer.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.AspNetCore.Rewrite;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -81,7 +76,8 @@ namespace BackEnd.WebApi
             {
                 options.UseSqlServer(Configuration.GetConnectionString("Production"));
 
-            }); services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            }); 
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             #endregion
 
             #region Application Services
@@ -147,7 +143,7 @@ namespace BackEnd.WebApi
             });
             services.AddResponseCompression(opt => opt.Providers.Add<GzipCompressionProvider>());
             #region Publish Section
-            services.AddSpaStaticFiles();
+           // services.AddSpaStaticFiles();
                 
             #endregion
 
@@ -199,7 +195,7 @@ namespace BackEnd.WebApi
                    pattern: "{controller=home}/{action=index}");
             });
             #region Publish Section
-            //
+
             app.UseRewriter(new RewriteOptions().AddRedirect(@"^\s*$", "/app/", 301));
 
             app.Map("/app", site =>
@@ -211,11 +207,7 @@ namespace BackEnd.WebApi
                     {
                         FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/app"))
                     };
-                    //spa.UseSpaPrerendering(options =>
-                    //{
-                    //    options.BootModulePath = $"{spa.Options.SourcePath}/dist-server/main.js";
-                    //    options.ExcludeUrls = new[] { "/sockjs-node" };
-                    //});
+
                 });
             }).Map("/panel", panel =>
             {
