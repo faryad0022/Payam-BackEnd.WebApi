@@ -1,53 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>90ef7c42-87d1-41be-b087-013cebd9557a</UserSecretsId>
-	<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
-    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
-    <IsPackable>false</IsPackable>
-    <DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<UserSecretsId>90ef7c42-87d1-41be-b087-013cebd9557a</UserSecretsId>
+		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+		<IsPackable>false</IsPackable>
+		<DockerDefaultTargetOS>Windows</DockerDefaultTargetOS>
+	</PropertyGroup>
 	<PropertyGroup>
 		<PublishWithAspNetCoreTargetManifest>false</PublishWithAspNetCoreTargetManifest>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="app\**" />
-	  <Compile Remove="panel\**" />
-	  <Content Remove="app\**" />
-	  <Content Remove="panel\**" />
-	  <EmbeddedResource Remove="app\**" />
-	  <EmbeddedResource Remove="panel\**" />
-	  <None Remove="app\**" />
-	  <None Remove="panel\**" />
+		<Compile Remove="app\**" />
+		<Compile Remove="panel\**" />
+		<Content Remove="app\**" />
+		<Content Remove="panel\**" />
+		<EmbeddedResource Remove="app\**" />
+		<EmbeddedResource Remove="panel\**" />
+		<None Remove="app\**" />
+		<None Remove="panel\**" />
 	</ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Elmah.Io.AspNetCore" Version="4.1.37" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.19" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.22" />
-    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.22" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Elmah.Io.AspNetCore" Version="4.1.37" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.22" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.22" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.22" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.10" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
 	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\BackEnd.Core\BackEnd.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\BackEnd.Core\BackEnd.Core.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-	  <Folder Include="wwwroot\panel\" />
-	  <Folder Include="wwwroot\app\" />
-	  <Folder Include="wwwroot\images\logo\origin\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="wwwroot\panel\" />
+		<Folder Include="wwwroot\app\" />
+		<Folder Include="wwwroot\images\logo\origin\" />
+	</ItemGroup>
 
 
 </Project>

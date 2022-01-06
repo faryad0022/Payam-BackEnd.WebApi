@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using BackEnd.Core.DTOs.Address;
 using BackEnd.Core.Services.Interfaces;

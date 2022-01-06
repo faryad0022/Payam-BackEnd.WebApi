@@ -7,7 +7,7 @@ namespace BackEnd.Core.DTOs.Images
     public class FilterImageDTO: BasePaging
     {
         public string Title { get; set; } = "";
-        public List<ImageGallery> Images { get; set; }
+        public List<ImageGalleryDTO> Images { get; set; }
 
         public FilterImageDTO SetPaging(BasePaging paging)
         {
@@ -20,7 +20,7 @@ namespace BackEnd.Core.DTOs.Images
             this.SkipEntity = paging.SkipEntity;
             return this;
         }
-        public FilterImageDTO SetImages(List<ImageGallery> images)
+        public FilterImageDTO SetImages(List<ImageGalleryDTO> images)
         {
             this.Images = images;
             return this;

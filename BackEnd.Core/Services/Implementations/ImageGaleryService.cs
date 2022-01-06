@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using BackEnd.Core.DTOs.Images;
 using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Extensions.EntityMap.ImageGalleryMapping;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.DataLayer.Entities.Gallery;
 using BackEnd.DataLayer.Repository;
@@ -48,7 +49,7 @@ namespace BackEnd.Core.Services.Implementations
             var count = (int)Math.Ceiling(imageQuery.Count() / (double)filter.TakeEntity);// تعداد صفحات
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var images = await imageQuery.Paging(pager).ToListAsync();
-            return filter.SetImages(images).SetPaging(pager);
+            return filter.SetImages(images.MapToImageGalleryDTO()).SetPaging(pager);
         }
 
 

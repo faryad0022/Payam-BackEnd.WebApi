@@ -8,8 +8,6 @@ using BackEnd.WebApi.Controllers.Site;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackEnd.WebApi.Controllers.Admin
@@ -91,6 +89,8 @@ namespace BackEnd.WebApi.Controllers.Admin
 
         }
         #endregion
+
+
         #region Add Blog Pic
         [HttpPost("upload-blog-image")]
         public async Task<IActionResult> AddBlogPic(IFormFile UploadFiles)
@@ -111,6 +111,7 @@ namespace BackEnd.WebApi.Controllers.Admin
             return JsonResponseStatus.Success();
         }
         #endregion
+
         #region Change Status
         [HttpPost("change-blog-status")]
         public async Task<IActionResult> ChangeBlogStatus([FromBody] VmReturnBlog vm, [FromQuery] FilterBlogDTO filter)
@@ -174,6 +175,8 @@ namespace BackEnd.WebApi.Controllers.Admin
 
         }
         #endregion
+
+
         #region Delete Blog
         [HttpPost("delete-blog")]
         public async Task<IActionResult> DeleteBlog([FromBody] VmReturnBlog vm, [FromQuery] FilterBlogDTO filter)

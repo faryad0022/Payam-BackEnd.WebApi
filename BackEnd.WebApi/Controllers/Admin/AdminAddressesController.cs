@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using BackEnd.Core.DTOs.Address;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Common;
 using BackEnd.Core.ViewModels.Address;
-using BackEnd.DataLayer.Entities.Site;
-using BackEnd.WebApi.Controllers.Site;
+using BackEnd.Core.utilities.Extensions.EntityMap.Address;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
@@ -31,22 +26,8 @@ namespace BackEnd.WebApi.Controllers.Admin
         public async Task<IActionResult> GetAllAddress()
         {
             var addresses = await addressService.GetAllAddressAsync();
-            var all = new List<VmReturnAddress>();
-            foreach (var address in addresses)
-            {
-                var addr = new VmReturnAddress
-                {
-                    Id = address.Id,
-                    Telephone = address.Telephone,
-                    Address = address.Address,
-                    CellPhone = address.CellPhone,
-                    City = address.City,
-                    IsDelete = address.IsDelete,
-                    WorkHour = address.WorkHour
-                };
-                all.Add(addr);
-            }
-            return JsonResponseStatus.Success(all);
+
+            return JsonResponseStatus.Success(addresses.MapToAddrressDTOList());
         }
 
         [HttpPost("add-new-address")]
@@ -76,17 +57,8 @@ namespace BackEnd.WebApi.Controllers.Admin
             if (!await addressService.ChangeAddressStateAsync(address)) return JsonResponseStatus.ServerError("خطا از سمت سرور");
             
             var updatedAddressState = await addressService.GetAddressByIdAsync(id);
-            var returnAddress = new VmReturnAddress
-            {
-                Address = updatedAddressState.Address,
-                CellPhone = updatedAddressState.CellPhone,
-                City = updatedAddressState.City,
-                Id = updatedAddressState.Id,
-                IsDelete = updatedAddressState.IsDelete,
-                Telephone = updatedAddressState.Telephone,
-                WorkHour = updatedAddressState.WorkHour
-            };
-            return JsonResponseStatus.Success(returnAddress);
+
+            return JsonResponseStatus.Success(updatedAddressState.MapToAddrressDTO());
         }
 
         [HttpPost("edit-address")]

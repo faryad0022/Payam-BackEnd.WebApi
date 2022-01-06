@@ -9,9 +9,6 @@ namespace BackEnd.Core.Services.Interfaces
 {
     public interface IBlogContentService: IDisposable
     {
-        Task<List<BlogContent>> GetAllBlogsAsync();
-        Task<List<BlogContent>> GetAllBlogsAOfBlogGroupAsync(long blogId);
-        Task<List<BlogContent>> GetAllBlogsByTagsAsync();
         Task<BlogContent> GetBlogByIdAsync(long Id);
         Task<List<BlogContent>> GetBlogByTitleAsync(string Title);
         Task<FilterBlogDTO> GetFilterBlogs(FilterBlogDTO filter);

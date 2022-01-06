@@ -2,6 +2,7 @@
 using BackEnd.Core.DTOs.Logo;
 using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Extensions.EntityMap.LogoesMapping;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.DataLayer.Entities.Site;
 using BackEnd.DataLayer.Repository;
@@ -46,22 +47,9 @@ namespace BackEnd.Core.Services.Implementations
             var count = (int)Math.Ceiling(logoQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var logos = await logoQuery.Paging(pager).ToListAsync();
-            var returnLogos = new List<LogoDTO>();
-            foreach (var item in logos)
-            {
-                var vm = new LogoDTO
-                {
-                    Id = item.Id,
-                    ImageName = item.ImageName,
-                    Title = item.Title,
-                    Description = item.Description,
-                    IsDelete = item.IsDelete,
-                    
-                };
-                returnLogos.Add(vm);
-            }
 
-            return filter.SetLogos(returnLogos).SetPaging(pager);
+
+            return filter.SetLogos(logos.MapToLogoDTO()).SetPaging(pager);
         }
         #endregion
 

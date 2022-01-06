@@ -9,6 +9,7 @@ using BackEnd.WebApi.Controllers.Site;
 using Microsoft.Extensions.Logging.Abstractions;
 using BackEnd.Core.DTOs.Account;
 using BackEnd.WebApi.Identity;
+using BackEnd.Core.utilities.Extensions.EntityMap;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {
@@ -44,23 +45,8 @@ namespace BackEnd.WebApi.Controllers.Admin
         public async Task<IActionResult> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
-            var returnUsers = new List<VmReturnUser>();
-            foreach (var item in users)
-            {
-                var user = new VmReturnUser()
-                {
-                    Id = item.Id,
-                    IsActivated = item.IsActivated,
-                    Email = item.Email,
-                    Address = item.Address,
-                    FirstName = item.FirstName,
-                    LastName = item.FirstName,
-                    IsDelete = item.IsDelete
 
-                };
-                returnUsers.Add(user);
-            }
-            return JsonResponseStatus.Success(returnUsers);
+            return JsonResponseStatus.Success(users.MapToUserDTO());
         }
         #endregion
 

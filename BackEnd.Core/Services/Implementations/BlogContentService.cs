@@ -1,6 +1,7 @@
 ﻿using BackEnd.Core.DTOs.Blog;
 using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Extensions.EntityMap.BlogSection;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.Core.ViewModels.Blog;
 using BackEnd.DataLayer.Entities.Blog;
@@ -27,20 +28,7 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region Get
-        public async Task<List<BlogContent>> GetAllBlogsAOfBlogGroupAsync(long blogId)
-        {
-            return await blogContentRepository.GetEntitiesQuery().Where(b => b.BlogGroupId == blogId).ToListAsync();
-        }
 
-        public async Task<List<BlogContent>> GetAllBlogsAsync()
-        {
-            return await blogContentRepository.GetEntitiesQuery().ToListAsync();
-        }
-
-        public  Task<List<BlogContent>> GetAllBlogsByTagsAsync()
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<BlogContent> GetBlogByIdAsync(long Id)
         {
@@ -65,30 +53,9 @@ namespace BackEnd.Core.Services.Implementations
             var count = (int)Math.Ceiling(blogQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var blogs = await blogQuery.Paging(pager).ToListAsync();
-            var returnBlogs = new List<VmReturnBlog>();
-            foreach (var blog in blogs)
-            {
-                var vm = new VmReturnBlog
-                {
-                    Id = blog.Id,
-                    Title = blog.Title,
-                    IsDelete = blog.IsDelete,
-                    Tags = blog.Tags,
-                    ImageName = blog.ImageName,
-                    Text = blog.Text,
-                    BlogGroupId = blog.BlogGroupId,
-                    UserId = blog.UserId,
-                    UserName = blog.UserName,
-                    Status = blog.Status,
-                    IsSelected = blog.IsSelected,
-                    ViewCount = blog.ViewCount,
-                    BlogGroupName = blog.BlogGroupName
 
-                };
-                returnBlogs.Add(vm);
-            }
 
-            return filter.SetPaging(pager).SetBlogs(returnBlogs);
+            return filter.SetPaging(pager).SetBlogs(blogs.MapToBlogContentDTO());
         }
 
 
@@ -97,24 +64,14 @@ namespace BackEnd.Core.Services.Implementations
         #region Get For Site
         public async Task<List<SiteBlogDTO>> GetLatestBlogs()
         {
-            var blogs =  await blogContentRepository.GetEntitiesQuery().OrderByDescending(s => s.LastUpdateDate).Take(4).AsQueryable().ToListAsync();
-            var returnLastBlogsDTO = new List<SiteBlogDTO>();
-            foreach (var item in blogs)
-            {
-                var vm = new SiteBlogDTO
-                {
-                    BlogGroupId = item.BlogGroupId,
-                    BlogGroupName = item.BlogGroupName,
-                    ImageName = item.ImageName,
-                    Id = item.Id,
-                    Tags = item.Tags,
-                    Text = item.Text,
-                    Title = item.Title,
-                    ViewCount = item.ViewCount
-                };
-                returnLastBlogsDTO.Add(vm);
-            }
-            return returnLastBlogsDTO;
+            var blogs =  await blogContentRepository.GetEntitiesQuery()
+                .OrderByDescending(s => s.LastUpdateDate)
+                .Where(s=>!s.IsDelete)
+                .Take(4)
+                .AsQueryable()
+                .ToListAsync();
+
+            return blogs.MapToSiteBlogContentDTO();
         }
         public async Task<FilterSiteBlogDTO> GetSiteFilterBlogs(FilterSiteBlogDTO filter)
         {
@@ -127,25 +84,9 @@ namespace BackEnd.Core.Services.Implementations
             var count = (int)Math.Ceiling(blogQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var blogs = await blogQuery.Paging(pager).ToListAsync();
-            var returnBlogs = new List<SiteBlogDTO>();
-            foreach (var item in blogs)
-            {
-                var vm = new SiteBlogDTO
-                {
-                    BlogGroupId = item.BlogGroupId,
-                    BlogGroupName = item.BlogGroupName,
-                    ImageName = item.ImageName,
-                    Id = item.Id,
-                    Tags = item.Tags,
-                    Text = item.Text,
-                    Title = item.Title,
-                    ViewCount = item.ViewCount
+    
 
-                };
-                returnBlogs.Add(vm);
-            }
-
-            return filter.SetPaging(pager).SetBlogs(returnBlogs);
+            return filter.SetPaging(pager).SetBlogs(blogs.MapToSiteBlogContentDTO());
         }
         #endregion
 

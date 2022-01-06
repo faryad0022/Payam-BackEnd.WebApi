@@ -43,7 +43,7 @@ namespace BackEnd.WebApi
                 .AddJsonFile($"appsettings.json")
                 .Build()
                 );
-
+            /*
             #region swagger
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
@@ -70,7 +70,7 @@ namespace BackEnd.WebApi
                 });
             });
             #endregion
-
+            */
             #region Add DbContext
             services.AddDbContext<BackEndDbContext>(options =>
             {
@@ -160,7 +160,7 @@ namespace BackEnd.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-
+            /*
             #region swagger
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
@@ -172,6 +172,7 @@ namespace BackEnd.WebApi
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
             #endregion
+            */
             app.UseCors(Configuration["Cors:PolicyString"]);
             app.UseAuthentication();
             app.UseElmahIo();

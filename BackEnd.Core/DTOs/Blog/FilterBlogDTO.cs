@@ -9,7 +9,7 @@ namespace BackEnd.Core.DTOs.Blog
     public class FilterBlogDTO : BasePaging
     {
         public string Title { get; set; }
-        public List<VmReturnBlog> Blogs { get; set; }
+        public List<BlogContentDTO> Blogs { get; set; }
 
         public FilterBlogDTO SetPaging(BasePaging paging)
         {
@@ -22,7 +22,7 @@ namespace BackEnd.Core.DTOs.Blog
             this.SkipEntity = paging.SkipEntity;
             return this;
         }
-        public FilterBlogDTO SetBlogs(List<VmReturnBlog> blogs)
+        public FilterBlogDTO SetBlogs(List<BlogContentDTO> blogs)
         {
             this.Blogs = blogs;
             return this;

@@ -3,15 +3,14 @@ using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Security;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Convertors;
+using BackEnd.Core.utilities.Extensions.EntityMap.Appointments;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.DataLayer.Entities.PhoneBook;
 using BackEnd.DataLayer.Entities.Site;
 using BackEnd.DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BackEnd.Core.Services.Implementations
@@ -54,26 +53,8 @@ namespace BackEnd.Core.Services.Implementations
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var appoints = await appointmentQuery.Paging(pager).ToListAsync();
 
-            var returnAppointments = new List<AppointmentDTO>();
-            foreach (var item in appoints)
-            {
-                var vm = new AppointmentDTO
-                {
-                    Id = item.Id,
-                    Telephone = item.Telephone,
-                    CellPhone = item.CellPhone,
-                    IsDelete = item.IsDelete,
-                    Name = item.Name,
-                    Email = item.Email,
-                    Status = item.Status,
-                    Note = item.Note,
-                    CreateDate = item.CreateDate,
-                    LastUpdateDate = item.LastUpdateDate
-                   
-                };
-                returnAppointments.Add(vm);
-            }
-            return filter.SetAppointments(returnAppointments).SetPaging(pager);
+
+            return filter.SetAppointments(appoints.MapToAppointmentDTO()).SetPaging(pager);
         }
         #endregion
 
@@ -94,25 +75,8 @@ namespace BackEnd.Core.Services.Implementations
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var appoints = await appointmentQuery.Paging(pager).ToListAsync();
 
-            var returnAppointments = new List<AppointmentDTO>();
-            foreach (var item in appoints)
-            {
-                var vm = new AppointmentDTO
-                {
-                    Id = item.Id,
-                    Telephone = item.Telephone,
-                    CellPhone = item.CellPhone,
-                    IsDelete = item.IsDelete,
-                    Name = item.Name,
-                    Email = item.Email,
-                    Status = item.Status,
-                    Note = item.Note,
-                    CreateDate = item.CreateDate,
-                    LastUpdateDate = item.LastUpdateDate
-                };
-                returnAppointments.Add(vm);
-            }
-            return filter.SetAppointments(returnAppointments).SetPaging(pager);
+
+            return filter.SetAppointments(appoints.MapToAppointmentDTO()).SetPaging(pager);
         }
         #endregion
 

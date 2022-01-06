@@ -9,7 +9,7 @@ namespace BackEnd.Core.DTOs.Account
     public class FilterUserDTO : BasePaging
     {
         public string UserName { get; set; }
-        public List<User> Users { get; set; }
+        public List<UserDTO> Users { get; set; }
 
         public FilterUserDTO SetPaging(BasePaging paging)
         {
@@ -22,7 +22,7 @@ namespace BackEnd.Core.DTOs.Account
             this.SkipEntity = paging.SkipEntity;
             return this;
         }
-        public FilterUserDTO SetUsers(List<User> users)
+        public FilterUserDTO SetUsers(List<UserDTO> users)
         {
             this.Users = users;
             return this;

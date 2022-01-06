@@ -10,6 +10,7 @@ namespace BackEnd.Core.DTOs.Blog
         #region Properties
        // [Required]
         public long Id { get; set; }
+        public bool IsDelete { get; set; }
 
         [Display(Name = "نویسنده")]
         [Required(ErrorMessage = "لطفا {0} را وارد نمائید")]

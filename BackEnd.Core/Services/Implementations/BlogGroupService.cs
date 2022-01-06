@@ -1,6 +1,7 @@
 ﻿using BackEnd.Core.DTOs.Blog;
 using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Extensions.EntityMap.BlogSection;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.Core.ViewModels.Blog;
 using BackEnd.DataLayer.Entities.Blog;
@@ -26,24 +27,12 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region Get
-        public async Task<List<VmReturnBlogGroup>> GetAllActiveBlogGroupsAsync()
+        public async Task<List<BlogGroupDTO>> GetAllActiveBlogGroupsAsync()
         {
             try
             {
                 var blogGroups = await blogGroupRepository.GetEntitiesQuery().Where(b => !b.IsDelete).ToListAsync();
-                var returnBlogGroups = new List<VmReturnBlogGroup>();
-                foreach (var blogGroup in blogGroups)
-                {
-                    var vm = new VmReturnBlogGroup
-                    {
-                        Id = blogGroup.Id,
-                        Description = blogGroup.Description,
-                        Title = blogGroup.Title,
-                        IsDelete = blogGroup.IsDelete
-                    };
-                    returnBlogGroups.Add(vm);
-                }
-                return returnBlogGroups;
+                return blogGroups.MapToBlogGroupDTO();
             }
             catch (Exception)
             {
@@ -69,47 +58,21 @@ namespace BackEnd.Core.Services.Implementations
             var count = (int)Math.Ceiling(blogGroupQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var blogGroups = await blogGroupQuery.Paging(pager).ToListAsync();
-            var returnBlogGroups = new List<VmReturnBlogGroup>();
-            foreach (var blogGroup in blogGroups)
-            {
-                var vm = new VmReturnBlogGroup
-                {
-                    Id = blogGroup.Id,
-                    Description = blogGroup.Description,
-                    Title = blogGroup.Title,
-                    IsDelete = blogGroup.IsDelete
-                };
-                returnBlogGroups.Add(vm);
-            }
 
-            return filter.SetBlogGroups(returnBlogGroups).SetPaging(pager);
+            return filter.SetBlogGroups(blogGroups.MapToBlogGroupDTO()).SetPaging(pager);
         }
 
 
         public async Task<BlogGroup> GetBlogGroupByTitleAsync(string Title)
         {
-
             return await blogGroupRepository.GetEntitiesQuery().Where(b => b.Title == Title).SingleOrDefaultAsync();
-
-
-
         }
 
         public async Task<List<BlogGroupDTO>> GetActiveBlogGroups()
         {
             var blogGroups = await blogGroupRepository.GetEntitiesQuery().AsQueryable().Where(b => !b.IsDelete).ToListAsync();
-            var blogGroupList = new List<BlogGroupDTO>();
-            foreach (var item in blogGroups)
-            {
-                var blogGroup = new BlogGroupDTO 
-                {
-                    Title = item.Title,
-                    Description = item.Description,
-                    Id = item.Id
-                };
-                blogGroupList.Add(blogGroup);
-            }
-            return blogGroupList;
+
+            return blogGroups.MapToBlogGroupDTO();
         }
 
         #endregion

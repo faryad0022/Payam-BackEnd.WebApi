@@ -10,7 +10,7 @@ namespace BackEnd.Core.Services.Interfaces
 {
     public interface IBlogGroupService: IDisposable
     {
-        Task<List<VmReturnBlogGroup>> GetAllActiveBlogGroupsAsync();
+        Task<List<BlogGroupDTO>> GetAllActiveBlogGroupsAsync();
         Task<BlogGroup> GetBlogGroupByIdAsync(long Id);
         Task<BlogGroup> GetBlogGroupByTitleAsync(string Title);
         Task<FilterBlogGroupDTO> GetFilterBlogGourps(FilterBlogGroupDTO filter);

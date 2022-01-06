@@ -1,6 +1,7 @@
 ﻿using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.DTOs.Sliders;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Extensions.EntityMap.Sliders;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.DataLayer.Entities.Site;
 using BackEnd.DataLayer.Repository;
@@ -25,14 +26,16 @@ namespace BackEnd.Core.Services.Implementations
         #endregion
 
         #region Get
-        public async Task<List<Slider>> GetAllActiveSliders()
+        public async Task<List<SliderDTO>> GetAllActiveSliders()
         {
-            return await sliderRepository.GetEntitiesQuery().Where(s=>!s.IsDelete).ToListAsync();
+            var sliders = await sliderRepository.GetEntitiesQuery().Where(s => !s.IsDelete).ToListAsync();
+            return sliders.MapToSliderDTOList();
         }
 
-        public async Task<List<Slider>> GetAllSliders()
+        public async Task<List<SliderDTO>> GetAllSliders()
         {
-            return await sliderRepository.GetEntitiesQuery().ToListAsync();
+            var sliders = await sliderRepository.GetEntitiesQuery().ToListAsync();
+            return sliders.MapToSliderDTOList();
         }
 
         public async Task<Slider> GetSliderById(long id)
@@ -52,21 +55,8 @@ namespace BackEnd.Core.Services.Implementations
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var sliders = await sliderQuery.Paging(pager).ToListAsync();
 
-            var returnSliders = new List<SliderDTO>();
-            foreach (var item in sliders)
-            {
-                var vm = new SliderDTO
-                {
-                    Id = item.Id,
-                    ImageName = item.ImageName,
-                    Title = item.Title,
-                    Link = item.Link,
-                    Description = item.Description,
-                    IsDelete = item.IsDelete,
-                };
-                returnSliders.Add(vm);
-            }
-            return filter.SetSliders(returnSliders).SetPaging(pager);
+
+            return filter.SetSliders(sliders.MapToSliderDTOList()).SetPaging(pager);
         }
 
 

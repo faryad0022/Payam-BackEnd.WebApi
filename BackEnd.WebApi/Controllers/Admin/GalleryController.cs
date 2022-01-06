@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using BackEnd.Core.DTOs.Images;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Common;
 using BackEnd.Core.utilities.Extensions.FileExtensions;
-using BackEnd.WebApi.Controllers.Site;
 
 namespace BackEnd.WebApi.Controllers.Admin
 {

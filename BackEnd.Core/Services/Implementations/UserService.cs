@@ -3,6 +3,7 @@ using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Security;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Convertors;
+using BackEnd.Core.utilities.Extensions.EntityMap;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.DataLayer.Entities.Access;
 using BackEnd.DataLayer.Entities.Account;
@@ -59,7 +60,7 @@ namespace BackEnd.Core.Services.Implementations
             var count = (int)Math.Ceiling(usersQuery.Count() / (double)filter.TakeEntity);// تعداد صفحات
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var users = await usersQuery.Paging(pager).ToListAsync();
-            return filter.SetUsers(users).SetPaging(pager);
+            return filter.SetUsers(users.MapToUserDTO()).SetPaging(pager);
         }
         public async Task<List<User>> GetAllUsersAsync()
         {
@@ -81,18 +82,8 @@ namespace BackEnd.Core.Services.Implementations
         public async Task<List<RoleDTO>> GetRolesAsync()
         {
             var roles = await roleRepository.GetEntitiesQuery().Where(s => !s.IsDelete).ToListAsync();
-            var rolesDTO = new List<RoleDTO>();
-            foreach (var role in roles)
-            {
-                var vm = new RoleDTO
-                {
-                    Id = role.Id,
-                    Name = role.Name,
-                    Title = role.Title
-                };
-                rolesDTO.Add(vm);
-            }
-            return rolesDTO;
+
+            return roles.MapToRoleDTO();
         }
         public async Task<bool> IsUserExistByEmailAsync(string email)
         {
@@ -106,18 +97,8 @@ namespace BackEnd.Core.Services.Implementations
                                                    .Select(s => s.Role)
                                                    .AsQueryable()
                                                    .ToListAsync();
-            var userRolsDTO = new List<RoleDTO>();
-            foreach (var role in userRoles)
-            {
-                var vm = new RoleDTO
-                {
-                    Id = role.Id,
-                    Name = role.Name,
-                    Title = role.Title
-                };
-                userRolsDTO.Add(vm);
-            }
-            return userRolsDTO;
+
+            return userRoles.MapToRoleDTO();
         }
 
 

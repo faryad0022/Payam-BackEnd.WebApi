@@ -6,6 +6,7 @@ using BackEnd.Core.DTOs.ContactUs;
 using BackEnd.Core.DTOs.Paging;
 using BackEnd.Core.Security;
 using BackEnd.Core.Services.Interfaces;
+using BackEnd.Core.utilities.Extensions.EntityMap.ContactUsMapping;
 using BackEnd.Core.utilities.Extensions.Paging;
 using BackEnd.DataLayer.Entities.Site;
 using BackEnd.DataLayer.Repository;
@@ -75,30 +76,12 @@ namespace BackEnd.Core.Services.Implementations
                 contactUsQuery = contactUsQuery.Where(b => b.Status == filter.SearchKey);
             }
 
-    
-
+   
             var count = (int)Math.Ceiling(contactUsQuery.Count() / (double)filter.TakeEntity); // بدست آوردن تعداد صفحات
             var pager = Pager.Build(count, filter.PageId, filter.TakeEntity);
             var contactUsList = await contactUsQuery.Paging(pager).ToListAsync();
-            var returnContactUsss = new List<ContactUsDTO>();
-            foreach (var item in contactUsList)
-            {
-                var vm = new ContactUsDTO
-                {
-                    Id = item.Id,
-                    Name = item.Name,
-                    Status = item.Status,
-                    Telephone = item.Telephone,
-                    IsDelete = item.IsDelete,
-                    Description = item.Description,
-                    Email = item.Email,
-                    Title = item.Title,
-                    CreateDate = item.CreateDate
-                };
-                returnContactUsss.Add(vm);
-            }
 
-            return filter.SetContactUsList(returnContactUsss).SetPaging(pager);
+            return filter.SetContactUsList(contactUsList.MapToContactUsDTO()).SetPaging(pager);
         }
 
         #endregion

@@ -9,8 +9,8 @@ namespace BackEnd.Core.Services.Interfaces
 {
     public interface ISliderService: IDisposable
     {
-        Task<List<Slider>> GetAllSliders();
-        Task<List<Slider>> GetAllActiveSliders();
+        Task<List<SliderDTO>> GetAllSliders();
+        Task<List<SliderDTO>> GetAllActiveSliders();
         Task<Slider> GetSliderById(long id);
         Task<FilterSliderDTO> GetAllSlidersFilterPagingAsync(FilterSliderDTO filter);
 
