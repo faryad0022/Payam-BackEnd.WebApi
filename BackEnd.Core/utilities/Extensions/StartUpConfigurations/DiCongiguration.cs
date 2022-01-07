@@ -9,7 +9,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
 {
     public static class DiCongiguration
     {
-        public static void ServicesInjection(this IServiceCollection services)
+        public static void AddServicesConfiguration(this IServiceCollection services)
         {
             #region Application Services
             services.AddScoped<IUserService, UserService>();

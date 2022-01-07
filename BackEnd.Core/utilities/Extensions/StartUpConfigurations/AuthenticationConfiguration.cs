@@ -9,7 +9,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
 {
     public static class AuthenticationConfiguration
     {
-        public static void AddAuthentication(this IServiceCollection services, IConfiguration configuration)
+        public static void AddAuthenticationConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -26,7 +26,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
                 });
 
         }
-        public static void UseAuthenticationDI(this IApplicationBuilder app)
+        public static void UseAuthenticationConfiguration(this IApplicationBuilder app)
         {
             app.UseAuthentication();
 

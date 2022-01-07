@@ -8,13 +8,12 @@ namespace BackEnd.Core.utilities.Extensions.Connection
 {
     public static class ConnectionExtension
     {
-        public static IServiceCollection AddApplicationDbContext(this IServiceCollection service, IConfiguration configuration) {
+        public static void AddApplicationDbContext(this IServiceCollection service, IConfiguration configuration) {
             service.AddDbContext<BackEndDbContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString("Production"));
 
             });
-            return service;
         }
     }
 }

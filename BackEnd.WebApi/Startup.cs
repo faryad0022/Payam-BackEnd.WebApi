@@ -2,6 +2,8 @@ using BackEnd.Core.Security;
 using BackEnd.Core.Services.Implementations;
 using BackEnd.Core.Services.Interfaces;
 using BackEnd.Core.utilities.Convertors;
+using BackEnd.Core.utilities.Extensions.Connection;
+using BackEnd.Core.utilities.Extensions.StartUpConfigurations;
 using BackEnd.DataLayer.Context;
 using BackEnd.DataLayer.Repository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -43,104 +45,29 @@ namespace BackEnd.WebApi
                 .AddJsonFile($"appsettings.json")
                 .Build()
                 );
-            /*
-            #region swagger
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen();
-            // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo
-                {
-                    Version = "v1",
-                    Title = "ToDo API",
-                    Description = "A simple example ASP.NET Core Web API",
-                    TermsOfService = new Uri("https://example.com/terms"),
-                    Contact = new OpenApiContact
-                    {
-                        Name = "Shayne Boyer",
-                        Email = string.Empty,
-                        Url = new Uri("https://twitter.com/spboyer"),
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "Use under LICX",
-                        Url = new Uri("https://example.com/license"),
-                    }
-                });
-            });
-            #endregion
-            */
-            #region Add DbContext
-            services.AddDbContext<BackEndDbContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("Production"));
 
-            }); 
+            //services.AddSwaggerConfiguration();
+            #region Add DbContext
+            services.AddApplicationDbContext(Configuration);
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             #endregion
 
-            #region Application Services
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<ISliderService, SliderService>();
-            services.AddScoped<IPasswordHelper, PasswordHelper>();
-            services.AddScoped<IMailSender, SendEmail>();
-            services.AddScoped<IViewRenderService, RenderViewToString>();
-            services.AddScoped<IImageGalleryService, ImageGaleryService>();
-            services.AddScoped<IAddressService, AddressService>();
-            services.AddScoped<ISocialService, SocialService>();
-            services.AddScoped<IContactUsService, ContactUsService>();
-            services.AddScoped<IBlogContentService, BlogContentService>();
-            services.AddScoped<IBlogGroupService, BlogGroupService>();
-            services.AddScoped<IAppointmentService, AppointmentService>();
-            services.AddScoped<ILogoService, LogoService>();
-            services.AddScoped<IAboutService, AboutService>();
-            services.AddScoped<ICountNotificationService, CountNotificationService>();
-            services.AddScoped<IAccessService, AccessService>();
+            services.AddServicesConfiguration();
 
-            #endregion
+            services.AddAuthenticationConfiguration(Configuration);
 
-            #region Authentication Setting
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-                    };
-                });
-            #endregion
-
-            #region CORS Setting
-            services.AddCors(options =>
-            {
-                options.AddPolicy(Configuration["Cors:PolicyString"], builder =>
-                {
-                    builder.AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .AllowAnyOrigin()
-                    .WithExposedHeaders("ejUrl").WithExposedHeaders("ejUrlName")
-                    //.AllowCredentials()
-                    .Build();
-                });
-            });
-            #endregion
-
+            services.AddCorseConfiguration(Configuration);
 
             services.AddControllers();
+            
             services.AddControllersWithViews();
+            
             services.AddRazorPages();
+            
             services.AddMvc();
-            services.AddElmahIo(o =>
-            {
-                o.ApiKey = "11daace02f3d4a348002f48d8723bda8";
-                o.LogId = new Guid("f23c2df8-a961-4a50-a75c-92e208dd0369");
-            });
+            
+            services.AddElmahConfiguration();
+            
             services.AddResponseCompression(opt => opt.Providers.Add<GzipCompressionProvider>());
             #region Publish Section
            // services.AddSpaStaticFiles();
@@ -160,25 +87,17 @@ namespace BackEnd.WebApi
                 app.UseDeveloperExceptionPage();
             }
 
-            /*
-            #region swagger
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
+            //app.UseSwaggerConfiguration();
 
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
-            // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
-            #endregion
-            */
             app.UseCors(Configuration["Cors:PolicyString"]);
-            app.UseAuthentication();
-            app.UseElmahIo();
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
 
+            app.UseAuthenticationConfiguration();
+
+            app.UseElmahConfiguration();
+
+            app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
 
             app.UseRouting();
 

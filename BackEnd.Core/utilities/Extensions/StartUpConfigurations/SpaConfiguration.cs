@@ -12,7 +12,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
         {
             services.AddSpaStaticFiles();
         }
-        public static void UseSiteSpa(this IApplicationBuilder app, IFileProvider fileProvider)
+        public static void UseSiteSpaConfiguration(this IApplicationBuilder app, IFileProvider fileProvider)
         {
             #region Publish Section
             app.UseSpaStaticFiles(new StaticFileOptions

@@ -9,7 +9,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
 {
     public static class SwaggerConfiguration
     {
-        public static void  UseSwagger(this IServiceCollection services)
+        public static void  AddSwaggerConfiguration(this IServiceCollection services)
         {
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
@@ -36,7 +36,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
                 });
             });
         }
-        public static void AddSwagger(this IApplicationBuilder app)
+        public static void UseSwaggerConfiguration(this IApplicationBuilder app)
         {
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();

@@ -9,7 +9,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
 {
     public static class CorsConfiguration
     {
-        public static void AddCorse(this IServiceCollection services, IConfiguration Configuration) 
+        public static void AddCorseConfiguration(this IServiceCollection services, IConfiguration Configuration) 
         {
             services.AddCors(options =>
             {
@@ -25,7 +25,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
             });
         }
 
-        public static void UseCorse(this IApplicationBuilder app, IConfiguration Configuration)
+        public static void UseCorseConfiguration(this IApplicationBuilder app, IConfiguration Configuration)
         {
             app.UseCors(Configuration["Cors:PolicyString"]);
 

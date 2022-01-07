@@ -9,7 +9,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
 {
     public static class ElmahConfiguration
     {
-        public static void AddElmahService(this IServiceCollection services)
+        public static void AddElmahConfiguration(this IServiceCollection services)
         {
             services.AddElmahIo(o =>
             {
@@ -18,7 +18,7 @@ namespace BackEnd.Core.utilities.Extensions.StartUpConfigurations
             });
         }
 
-        public static void UseElmah(this IApplicationBuilder app)
+        public static void UseElmahConfiguration(this IApplicationBuilder app)
         {
             app.UseElmahIo();
 

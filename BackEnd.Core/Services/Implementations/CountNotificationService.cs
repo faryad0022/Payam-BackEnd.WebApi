@@ -6,9 +6,7 @@ using BackEnd.DataLayer.Entities.Gallery;
 using BackEnd.DataLayer.Entities.Site;
 using BackEnd.DataLayer.Repository;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackEnd.Core.Services.Implementations
@@ -40,15 +38,15 @@ namespace BackEnd.Core.Services.Implementations
         {
             var dto = new CountNotificationDTO
             {
-                AppointmentCount = await appointmentRepository.GetEntitiesQuery().CountAsync(),
+                AppointmentCount = await appointmentRepository.GetEntitiesQuery().Where(s=>!s.IsDelete).CountAsync(),
                 BlogsCount = await blogContentRepository.GetEntitiesQuery().CountAsync(),
                 GalleryCount = await galleryRepository.GetEntitiesQuery().CountAsync(),
                 UsersCount = await userRepository.GetEntitiesQuery().CountAsync(),
-
             };
             return dto;
         }
         #endregion
+
         #region Dispose
         public void Dispose()
         {
